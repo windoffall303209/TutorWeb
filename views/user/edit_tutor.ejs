@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chỉnh sửa thông tin gia sư</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .is-invalid {
+        border-color: #dc3545;
+      }
+      .invalid-feedback {
+        display: none;
+        width: 100%;
+        margin-top: .25rem;
+        font-size: .875em;
+        color: #dc3545;
+      }
+      .was-validated .is-invalid ~ .invalid-feedback,
+      .was-validated :invalid ~ .invalid-feedback {
+        display: block;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <div class="container">
+      <div class="card mt-5 mx-auto" style="max-width: 800px;">
+        <div class="card-body">
+          <h1 class="text-center mb-4">Chỉnh sửa thông tin gia sư</h1>
+
+          <% if (message) { %>
+            <div class="alert alert-danger"><%= message %></div>
+          <% } %>
+          
+          <form id="tutorForm" action="/user/tutors" method="POST" class="needs-validation" novalidate>
+            <input type="hidden" name="tutorId" value="<%= tutorInfo.id %>" />
+
+            <div class="mb-3">
+              <label for="full_name" class="form-label">Họ và tên</label>
+              <input
+                type="text"
+                class="form-control <%= locals.errors && errors.full_name ? 'is-invalid' : '' %>"
+                id="full_name"
+                name="full_name"
+                value="<%= tutorInfo.full_name %>"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập họ và tên</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="birth_year" class="form-label">Năm sinh</label>
+              <input
+                type="number"
+                class="form-control <%= locals.errors && errors.birth_year ? 'is-invalid' : '' %>"
+                id="birth_year"
+                name="birth_year"
+                value="<%= tutorInfo.birth_year %>"
+                required
+                min="1900"
+                max="<%= new Date().getFullYear() %>"
+              />
+              <div class="invalid-feedback">Vui lòng nhập năm sinh hợp lệ</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="gender" class="form-label">Giới tính</label>
+              <select class="form-select <%= locals.errors && errors.gender ? 'is-invalid' : '' %>" id="gender" name="gender" required>
+                <option value="male" <%= tutorInfo.gender === 'male' ? 'selected' : '' %>>Nam</option>
+                <option value="female" <%= tutorInfo.gender === 'female' ? 'selected' : '' %>>Nữ</option>
+                <option value="other" <%= tutorInfo.gender === 'other' ? 'selected' : '' %>>Khác</option>
+              </select>
+              <div class="invalid-feedback">Vui lòng chọn giới tính</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="address" class="form-label">Địa chỉ</label>
+              <input
+                type="text"
+                class="form-control <%= locals.errors && errors.address ? 'is-invalid' : '' %>"
+                id="address"
+                name="address"
+                value="<%= tutorInfo.address %>"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập địa chỉ</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="district" class="form-label">Quận/Huyện</label>
+              <input
+                type="text"
+                class="form-control <%= locals.errors && errors.district ? 'is-invalid' : '' %>"
+                id="district"
+                name="district"
+                value="<%= tutorInfo.district %>"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập quận/huyện</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="province" class="form-label">Tỉnh/Thành phố</label>
+              <input
+                type="text"
+                class="form-control <%= locals.errors && errors.province ? 'is-invalid' : '' %>"
+                id="province"
+                name="province"
+                value="<%= tutorInfo.province %>"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập tỉnh/thành phố</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Môn học</label>
+              <div class="d-flex flex-wrap gap-3">
+                <% subjects.forEach(function(subject) { %>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input <%= locals.errors && errors.subjects ? 'is-invalid' : '' %>"
+                      type="checkbox"
+                      name="subjects[]"
+                      value="<%= subject.id %>"
+                      id="subject_<%= subject.id %>"
+                      <%= tutorInfo.subjects && tutorInfo.subjects.includes(subject.id) ? 'checked' : '' %>
+                    />
+                    <label class="form-check-label" for="subject_<%= subject.id %>">
+                      <%= subject.name %>
+                    </label>
+                  </div>
+                <% }); %>
+              </div>
+              <div class="invalid-feedback">Vui lòng chọn ít nhất một môn học</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Lớp học</label>
+              <div class="d-flex flex-wrap gap-3">
+                <% grades.forEach(function(grade) { %>
+                  <div class="form-check">
+                    <input
+                      class="form-check-input <%= locals.errors && errors.grades ? 'is-invalid' : '' %>"
+                      type="checkbox"
+                      name="grades[]"
+                      value="<%= grade.id %>"
+                      id="grade_<%= grade.id %>"
+                      <%= tutorInfo.grades && tutorInfo.grades.includes(grade.id) ? 'checked' : '' %>
+                    />
+                    <label class="form-check-label" for="grade_<%= grade.id %>">
+                      <%= grade.name %>
+                    </label>
+                  </div>
+                <% }); %>
+              </div>
+              <div class="invalid-feedback">Vui lòng chọn ít nhất một lớp học</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="introduction" class="form-label">Giới thiệu</label>
+              <textarea
+                class="form-control <%= locals.errors && errors.introduction ? 'is-invalid' : '' %>"
+                id="introduction"
+                name="introduction"
+                rows="4"
+                required
+              ><%= tutorInfo.introduction %></textarea>
+              <div class="invalid-feedback">Vui lòng nhập nội dung giới thiệu</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="phone" class="form-label">Số điện thoại</label>
+              <input
+                type="tel"
+                class="form-control <%= locals.errors && errors.phone ? 'is-invalid' : '' %>"
+                id="phone"
+                name="phone"
+                value="<%= tutorInfo.phone %>"
+                required
+              />
+              <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ</div>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+              <a href="/user" class="btn btn-secondary">Hủy</a>
+              <button type="submit" class="btn btn-primary">Cập nhật</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Kích hoạt validation Bootstrap
+      document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('tutorForm');
+        
+        // Kiểm tra xem có ít nhất một môn học và một lớp học được chọn
+        function validateCheckboxGroups() {
+          const subjectChecked = document.querySelectorAll('input[name="subjects[]"]:checked').length > 0;
+          const gradeChecked = document.querySelectorAll('input[name="grades[]"]:checked').length > 0;
+          
+          if (!subjectChecked) {
+            document.querySelectorAll('input[name="subjects[]"]').forEach(cb => {
+              cb.classList.add('is-invalid');
+            });
+          } else {
+            document.querySelectorAll('input[name="subjects[]"]').forEach(cb => {
+              cb.classList.remove('is-invalid');
+            });
+          }
+          
+          if (!gradeChecked) {
+            document.querySelectorAll('input[name="grades[]"]').forEach(cb => {
+              cb.classList.add('is-invalid');
+            });
+          } else {
+            document.querySelectorAll('input[name="grades[]"]').forEach(cb => {
+              cb.classList.remove('is-invalid');
+            });
+          }
+          
+          return subjectChecked && gradeChecked;
+        }
+        
+        form.addEventListener('submit', function(event) {
+          const formValid = form.checkValidity();
+          const checkboxesValid = validateCheckboxGroups();
+          
+          if (!formValid || !checkboxesValid) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          
+          form.classList.add('was-validated');
+        });
+      });
+    </script>
+  </body>
+</html>
