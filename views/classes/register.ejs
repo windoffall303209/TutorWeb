@@ -1,0 +1,170 @@
+<form
+  action="/classes/register"
+  method="POST"
+  class="needs-validation"
+  novalidate
+>
+  <div class="mb-3">
+    <label for="parent_name" class="form-label">Họ tên phụ huynh</label>
+    <input
+      type="text"
+      class="form-control"
+      id="parent_name"
+      name="parent_name"
+      required
+    />
+    <div class="invalid-feedback">Vui lòng nhập họ tên phụ huynh</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="phone" class="form-label">Số điện thoại</label>
+    <input type="tel" class="form-control" id="phone" name="phone" required />
+    <div class="invalid-feedback">Vui lòng nhập số điện thoại</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="district" class="form-label">Quận/Huyện</label>
+    <input
+      type="text"
+      class="form-control"
+      id="district"
+      name="district"
+      required
+    />
+    <div class="invalid-feedback">Vui lòng nhập quận/huyện</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="province" class="form-label">Tỉnh/Thành phố</label>
+    <input
+      type="text"
+      class="form-control"
+      id="province"
+      name="province"
+      required
+    />
+    <div class="invalid-feedback">Vui lòng nhập tỉnh/thành phố</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="specific_address" class="form-label">Địa chỉ cụ thể</label>
+    <input
+      type="text"
+      class="form-control"
+      id="specific_address"
+      name="specific_address"
+      required
+    />
+    <div class="invalid-feedback">Vui lòng nhập địa chỉ cụ thể</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="subject_id" class="form-label">Môn học</label>
+    <select class="form-select" id="subject_id" name="subject_id" required>
+      <option value="">Chọn môn học</option>
+      <% subjects.forEach(subject => { %>
+      <option value="<%= subject.id %>"><%= subject.name %></option>
+      <% }) %>
+    </select>
+    <div class="invalid-feedback">Vui lòng chọn môn học</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="grade_id" class="form-label">Khối lớp</label>
+    <select class="form-select" id="grade_id" name="grade_id" required>
+      <option value="">Chọn khối lớp</option>
+      <% grades.forEach(grade => { %>
+      <option value="<%= grade.id %>"><%= grade.name %></option>
+      <% }) %>
+    </select>
+    <div class="invalid-feedback">Vui lòng chọn khối lớp</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="tutor_gender" class="form-label">Giới tính gia sư</label>
+    <select class="form-select" id="tutor_gender" name="tutor_gender" required>
+      <option value="">Chọn giới tính</option>
+      <option value="male">Nam</option>
+      <option value="female">Nữ</option>
+      <option value="all">Không yêu cầu</option>
+    </select>
+    <div class="invalid-feedback">Vui lòng chọn giới tính gia sư</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="sessions_per_week" class="form-label">Số buổi/tuần</label>
+    <input
+      type="number"
+      class="form-control"
+      id="sessions_per_week"
+      name="sessions_per_week"
+      required
+      min="1"
+    />
+    <div class="invalid-feedback">Vui lòng nhập số buổi học mỗi tuần</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="fee_per_session" class="form-label">Học phí/buổi (VNĐ)</label>
+    <input
+      type="number"
+      class="form-control"
+      id="fee_per_session"
+      name="fee_per_session"
+      required
+      min="0"
+    />
+    <div class="invalid-feedback">Vui lòng nhập học phí mỗi buổi</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="learning_mode" class="form-label">Hình thức học</label>
+    <select
+      class="form-select"
+      id="learning_mode"
+      name="learning_mode"
+      required
+    >
+      <option value="">Chọn hình thức học</option>
+      <option value="online">Online</option>
+      <option value="offline">Offline</option>
+      <option value="all">Linh hoạt</option>
+    </select>
+    <div class="invalid-feedback">Vui lòng chọn hình thức học</div>
+  </div>
+
+  <div class="mb-3">
+    <label for="description" class="form-label">Mô tả thêm</label>
+    <textarea
+      class="form-control"
+      id="description"
+      name="description"
+      rows="3"
+      required
+    ></textarea>
+    <div class="invalid-feedback">Vui lòng nhập mô tả thêm</div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Đăng ký</button>
+</form>
+
+<script>
+  // Form validation
+  (function () {
+    "use strict";
+    var forms = document.querySelectorAll(".needs-validation");
+    Array.prototype.slice.call(forms).forEach(function (form) {
+      form.addEventListener(
+        "submit",
+        function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add("was-validated");
+        },
+        false
+      );
+    });
+  })();
+</script>

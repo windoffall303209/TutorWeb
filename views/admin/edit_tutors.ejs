@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sửa gia sư</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>Sửa gia sư</h1>
+    <a href="/admin/tutors" class="btn btn-secondary mb-3">Quay lại</a>
+
+    <form action="/admin/tutors/edit/<%= editTutor.id %>" method="POST">
+      <div class="form-group">
+        <label for="full_name">Họ và tên</label>
+        <input type="text" class="form-control" id="full_name" name="full_name" value="<%= editTutor.full_name %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="birth_year">Năm sinh</label>
+        <input type="number" class="form-control" id="birth_year" name="birth_year" value="<%= editTutor.birth_year %>" required min="1900" max="<%= new Date().getFullYear() %>">
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Giới tính</label>
+        <select class="form-control" id="gender" name="gender" required>
+          <option value="male" <%= editTutor.gender === 'male' ? 'selected' : '' %>>Nam</option>
+          <option value="female" <%= editTutor.gender === 'female' ? 'selected' : '' %>>Nữ</option>
+          <option value="other" <%= editTutor.gender === 'other' ? 'selected' : '' %>>Khác</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Địa chỉ</label>
+        <input type="text" class="form-control" id="address" name="address" value="<%= editTutor.address %>" required>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="provinceClass" class="form-label">Thành phố</label>
+            <select class="form-select" id="provinceClass" name="province" required>
+              <!-- Dữ liệu sẽ được chèn tự động bởi JavaScript -->
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="districtClass" class="form-label">Quận</label>
+            <select class="form-select" id="districtClass" name="district" required>
+              <!-- Dữ liệu sẽ được chèn tự động bởi JavaScript -->
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Môn dạy</label>
+        <div class="row">
+          <% subjects.forEach(subject => { %>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="subjects_teach[]" value="<%= subject.id %>"
+                  id="subject_<%= subject.id %>" <%= editTutor.subjects_teach && editTutor.subjects_teach.includes(subject.id.toString()) ? 'checked' : '' %>>
+                <label class="form-check-label" for="subject_<%= subject.id %>">
+                  <%= subject.name %>
+                </label>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Lớp dạy</label>
+        <div class="row">
+          <% grades.forEach(grade => { %>
+            <div class="col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="classes_teach[]" value="<%= grade.id %>"
+                  id="grade_<%= grade.id %>" <%= editTutor.classes_teach && editTutor.classes_teach.includes(grade.id.toString()) ? 'checked' : '' %>>
+                <label class="form-check-label" for="grade_<%= grade.id %>">
+                  <%= grade.name %>
+                </label>
+              </div>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Trình độ</label>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="education_level[]" value="Đại học" 
+                id="edu_university" <%= editTutor.education_level.includes('Đại học') ? 'checked' : '' %>>
+              <label class="form-check-label" for="edu_university">Đại học</label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="education_level[]" value="Thạc sĩ" 
+                id="edu_master" <%= editTutor.education_level.includes('Thạc sĩ') ? 'checked' : '' %>>
+              <label class="form-check-label" for="edu_master">Thạc sĩ</label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="education_level[]" value="Tiến sĩ" 
+                id="edu_phd" <%= editTutor.education_level.includes('Tiến sĩ') ? 'checked' : '' %>>
+              <label class="form-check-label" for="edu_phd">Tiến sĩ</label>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="education_level[]" value="Giáo viên" 
+                id="edu_teacher" <%= editTutor.education_level.includes('Giáo viên') ? 'checked' : '' %>>
+              <label class="form-check-label" for="edu_teacher">Giáo viên</label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="introduction">Giới thiệu</label>
+        <textarea class="form-control" id="introduction" name="introduction" rows="3"><%= editTutor.introduction %></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Số điện thoại</label>
+        <input type="tel" class="form-control" id="phone" name="phone" value="<%= editTutor.phone %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="is_active">Trạng thái hoạt động</label>
+        <select class="form-control" id="is_active" name="is_active" required>
+          <option value="1" <%= editTutor.is_active === 1 ? 'selected' : '' %>>Hoạt động</option>
+          <option value="0" <%= editTutor.is_active === 0 ? 'selected' : '' %>>Không hoạt động</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Cập nhật</button>
+      <a href="/admin/tutors" class="btn btn-secondary">Hủy</a>
+    </form>
+  </div>
+
+  <script>
+    // Load provinces
+    fetch('/api/provinces')
+      .then(response => response.json())
+      .then(provinces => {
+        const provinceSelect = document.getElementById('provinceClass');
+        provinces.forEach(province => {
+          const option = document.createElement('option');
+          option.value = province.name;
+          option.textContent = province.name;
+          if (province.name === '<%= editTutor.province %>') {
+            option.selected = true;
+          }
+          provinceSelect.appendChild(option);
+        });
+      });
+
+    // Load districts when province is selected
+    document.getElementById('provinceClass').addEventListener('change', function() {
+      const province = this.value;
+      const districtSelect = document.getElementById('districtClass');
+      districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+      
+      if (province) {
+        fetch(`/api/districts?province=${encodeURIComponent(province)}`)
+          .then(response => response.json())
+          .then(districts => {
+            districts.forEach(district => {
+              const option = document.createElement('option');
+              option.value = district.name;
+              option.textContent = district.name;
+              if (district.name === '<%= editTutor.district %>') {
+                option.selected = true;
+              }
+              districtSelect.appendChild(option);
+            });
+          });
+      }
+    });
+
+    // Load initial districts if province is selected
+    const initialProvince = document.getElementById('provinceClass').value;
+    if (initialProvince) {
+      fetch(`/api/districts?province=${encodeURIComponent(initialProvince)}`)
+        .then(response => response.json())
+        .then(districts => {
+          const districtSelect = document.getElementById('districtClass');
+          districts.forEach(district => {
+            const option = document.createElement('option');
+            option.value = district.name;
+            option.textContent = district.name;
+            if (district.name === '<%= editTutor.district %>') {
+              option.selected = true;
+            }
+            districtSelect.appendChild(option);
+          });
+        });
+    }
+  </script>
+</body>
+</html>

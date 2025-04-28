@@ -1,0 +1,209 @@
+<div class="container mt-4">
+
+  <div class="card border-0 shadow-sm mb-4" data-aos="fade-up">
+    <div class="card-header bg-primary text-white">
+      <h1 class="h3 mb-0">
+        <i class="fas fa-user-tie me-2"></i>Danh sách gia sư
+      </h1>
+    </div>
+    
+    <!-- Bộ lọc -->
+    <div class="card-body">
+      <form method="GET" class="row g-3">
+        <div class="col-md">
+          <label class="form-label"><i class="fas fa-book text-primary me-1"></i>Môn học</label>
+          <select name="subjects_teach" class="form-select shadow-sm">
+            <option value="">Tất cả</option>
+            <% subjects.forEach(function(subject) { %>
+              <option value="<%= subject.id %>" <%= query.subjects_teach == subject.id ? 'selected' : '' %>>
+                <%= subject.name %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="col-md">
+          <label class="form-label"><i class="fas fa-graduation-cap text-primary me-1"></i>Khối lớp</label>
+          <select name="classes_teach" class="form-select shadow-sm">
+            <option value="">Tất cả</option>
+            <% grades.forEach(function(grade) { %>
+              <option value="<%= grade.id %>" <%= query.classes_teach == grade.id ? 'selected' : '' %>>
+                <%= grade.name %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="col-md">
+          <label class="form-label"><i class="fas fa-venus-mars text-primary me-1"></i>Giới tính</label>
+          <select name="gender" class="form-select shadow-sm">
+            <option value="">Tất cả</option>
+            <option value="male" <%= query.gender === 'male' ? 'selected' : '' %>>Nam</option>
+            <option value="female" <%= query.gender === 'female' ? 'selected' : '' %>>Nữ</option>
+          </select>
+        </div>
+        <div class="col-md">
+          <label class="form-label"><i class="fas fa-university text-primary me-1"></i>Trình độ</label>
+          <select name="education_level" class="form-select shadow-sm">
+            <option value="">Tất cả</option>
+            <option value="high_school" <%= query.education_level === 'high_school' ? 'selected' : '' %>>THPT</option>
+            <option value="university" <%= query.education_level === 'university' ? 'selected' : '' %>>Đại học</option>
+            <option value="graduater" <%= query.education_level === 'graduater' ? 'selected' : '' %>>Sau ĐH</option>
+          </select>
+        </div>
+        <div class="col-md">
+          <label class="form-label"><i class="fas fa-map-marker-alt text-primary me-1"></i>Quận/Huyện</label>
+          <select name="district" class="form-select shadow-sm">
+            <option value="">Tất cả</option>
+            <% districts.forEach(function(district) { %>
+              <option value="<%= district.district %>" <%= query.district == district.district ? 'selected' : '' %>>
+                <%= district.district %>
+              </option>
+            <% }); %>
+          </select>
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-4">
+          <button type="submit" class="btn btn-primary px-4">
+            <i class="fas fa-filter me-2"></i>Lọc kết quả
+          </button>
+          <a href="/tutors" class="btn btn-outline-secondary ms-3">
+            <i class="fas fa-undo me-2"></i>Xóa bộ lọc
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Danh sách gia sư -->
+  <div class="row" data-aos="fade-up" data-aos-delay="100">
+    <% if (tutors.length === 0) { %>
+      <div class="col-12 text-center py-5">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Không tìm thấy gia sư phù hợp</h4>
+        <p class="text-muted">Vui lòng thử lại với điều kiện lọc khác.</p>
+        <a href="/tutors" class="btn btn-primary mt-3">
+          <i class="fas fa-undo me-2"></i>Xem tất cả gia sư
+        </a>
+      </div>
+    <% } %>
+    
+    <% tutors.forEach(function(tutor) { %>
+      <% if (tutor.is_active) { %>
+        <div class="col-lg-4 col-md-6 mb-4">
+          <div class="card h-100 border-0 shadow-sm hover-card">
+            <div class="position-relative">
+              <img src="<%= tutor.photo ? '/uploads/' + tutor.photo : '/img/logo.jpg' %>" 
+                  class="card-img-top" 
+                  alt="Ảnh gia sư <%= tutor.full_name %>"
+                  style="height: 220px; object-fit: cover;">
+              <div class="position-absolute top-0 end-0 m-2">
+                <span class="badge bg-<%= tutor.gender === 'male' ? 'info' : 'danger' %> rounded-pill px-3 py-2 shadow-sm">
+                  <i class="fas fa-<%= tutor.gender === 'male' ? 'mars' : 'venus' %> me-1"></i>
+                  <%= tutor.gender === 'male' ? 'Nam' : tutor.gender === 'female' ? 'Nữ' : 'Khác' %>
+                </span>
+              </div>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">
+                <a href="/tutors/<%= tutor.id %>" class="text-decoration-none stretched-link">
+                  <%= tutor.full_name %>
+                </a>
+              </h5>
+              <p class="text-muted">
+                <i class="fas fa-birthday-cake me-2"></i>Năm sinh: <%= tutor.birth_year %>
+              </p>
+              
+              <div class="mb-3">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-book text-primary me-2"></i>
+                  <strong>Môn dạy:</strong>
+                </div>
+                <div class="d-flex flex-wrap gap-1">
+                  <% tutor.subjects.forEach(function(subject) { %>
+                    <span class="badge bg-primary"><%= subject.name %></span>
+                  <% }); %>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex align-items-center mb-2">
+                  <i class="fas fa-graduation-cap text-success me-2"></i>
+                  <strong>Lớp dạy:</strong>
+                </div>
+                <div class="d-flex flex-wrap gap-1">
+                  <% tutor.grades.forEach(function(grade) { %>
+                    <span class="badge bg-success"><%= grade.name %></span>
+                  <% }); %>
+                </div>
+              </div>
+              
+              <p class="mb-0">
+                <i class="fas fa-map-marker-alt text-danger me-2"></i>
+                <strong>Địa chỉ:</strong> <%= tutor.address %>, <%= tutor.district %>, <%= tutor.province %>
+              </p>
+            </div>
+            <div class="card-footer bg-white border-0 text-center">
+              <a href="/tutors/<%= tutor.id %>" class="btn btn-outline-primary">
+                <i class="fas fa-info-circle me-2"></i>Xem chi tiết
+              </a>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    <% }); %>
+  </div>
+
+  <!-- Phân trang -->
+  <% if (totalPages > 1) { %>
+    <nav aria-label="Page navigation" class="mt-4 d-flex justify-content-center">
+      <ul class="pagination">
+        <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+          <a class="page-link" href="?page=<%= currentPage - 1 %>" aria-label="Previous">
+            <span aria-hidden="true"><i class="fas fa-chevron-left"></i></span>
+          </a>
+        </li>
+        
+        <% for(let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+          </li>
+        <% } %>
+        
+        <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+          <a class="page-link" href="?page=<%= currentPage + 1 %>" aria-label="Next">
+            <span aria-hidden="true"><i class="fas fa-chevron-right"></i></span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  <% } %>
+</div>
+
+<!-- CSS cho hover card -->
+<style>
+  .hover-card {
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .hover-card .card-img-top {
+    transition: all 0.5s ease;
+  }
+  
+  .hover-card:hover .card-img-top {
+    transform: scale(1.05);
+  }
+  
+  .pagination .page-link {
+    color: #4a90e2;
+    box-shadow: none;
+  }
+  
+  .pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #4a90e2, #5a55ae);
+    border-color: #4a90e2;
+  }
+</style>
