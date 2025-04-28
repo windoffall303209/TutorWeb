@@ -1,0 +1,222 @@
+<div class="container mt-4">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 py-3">
+      <h1 class="h3 mb-0">
+        <i class="fas fa-comments text-primary me-2"></i>Tin nhắn
+      </h1>
+    </div>
+    <div class="card-body p-0">
+      <div class="row g-0">
+        <!-- Danh sách người dùng -->
+        <div class="col-md-3 border-end">
+          <div class="py-3 px-3">
+            <div class="input-group mb-3">
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                placeholder="Tìm kiếm người dùng..."
+                id="user-search"
+                autocomplete="off"
+                aria-label="Tìm kiếm người dùng theo tên"
+              />
+              <button
+                class="btn btn-sm btn-outline-primary"
+                type="button"
+                id="search-button"
+                aria-label="Tìm kiếm"
+              >
+                <i class="fas fa-search"></i>
+              </button>
+            </div>
+
+            <div class="user-list" style="height: 500px; overflow-y: auto">
+              <ul class="list-group list-group-flush">
+                <% if (users.length === 0) { %>
+                <li class="list-group-item text-muted">
+                  <i class="fas fa-info-circle me-2"></i>Chưa có cuộc trò chuyện
+                  nào.
+                </li>
+                <% } else { %> <% users.forEach((user, index) => { %>
+                <li
+                  class="list-group-item d-flex justify-content-between align-items-center <%= (user.id === receiver?.id) ? 'active' : '' %>"
+                >
+                  <a
+                    href="#"
+                    class="text-decoration-none <%= (user.id === receiver?.id) ? 'text-white' : 'text-dark' %> d-flex align-items-center"
+                    onclick="selectUser('<%= user.id %>', '<%= user.display_name %>', event)"
+                  >
+                    <span
+                      class="avatar rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center me-2"
+                      style="width: 35px; height: 35px"
+                    >
+                      <%= user.display_name.charAt(0).toUpperCase() %>
+                    </span>
+                    <span><%= user.display_name %></span>
+                  </a>
+                  <% if (user.id === receiver?.id) { %>
+                  <span class="badge bg-light text-primary">
+                    <i class="fas fa-comment"></i>
+                  </span>
+                  <% } %>
+                </li>
+                <% }) %> <% } %>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ô chat -->
+        <div class="col-md-9">
+          <div
+            id="chat-container"
+            data-user-id="<%= userId %>"
+            data-receiver-id="<%= receiver ? receiver.id : '' %>"
+            data-receiver-name="<%= receiver ? receiver.display_name : '' %>"
+          >
+            <% if (!receiver) { %>
+            <div
+              class="d-flex flex-column align-items-center justify-content-center"
+              style="height: 500px"
+            >
+              <div class="text-center">
+                <i class="fas fa-comments fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">Chọn một người để bắt đầu chat</h4>
+                <p class="text-muted">Tin nhắn của bạn sẽ hiển thị ở đây</p>
+              </div>
+            </div>
+            <% } else { %>
+            <div class="chat-header border-bottom p-3">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                  <div
+                    class="avatar rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center me-2"
+                    style="width: 40px; height: 40px"
+                  >
+                    <%= receiver.display_name.charAt(0).toUpperCase() %>
+                  </div>
+                  <div>
+                    <h2 class="h5 mb-0" id="receiver-name">
+                      <%= receiver.display_name %>
+                    </h2>
+                    <small class="text-muted">
+                      <i
+                        class="fas fa-circle text-success me-1"
+                        style="font-size: 0.6rem"
+                      ></i>
+                      Đang hoạt động
+                    </small>
+                  </div>
+                </div>
+
+                <div class="chat-actions">
+                  <button
+                    class="btn btn-sm btn-outline-secondary rounded-circle"
+                    title="Xem thông tin"
+                  >
+                    <i class="fas fa-info"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div id="chat-box">
+              <% if (messages.length === 0) { %>
+              <div class="text-center my-5">
+                <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                <p class="text-muted">
+                  Bắt đầu cuộc trò chuyện với <%= receiver.display_name %>
+                </p>
+              </div>
+              <% } else { %> <% let lastDate = null; messages.forEach(msg => {
+              const msgDate = new Date(msg.timestamp).toLocaleDateString(); if
+              (lastDate !== msgDate) { lastDate = msgDate; %>
+              <div class="chat-date-divider">
+                <span><%= lastDate %></span>
+              </div>
+              <% } %> <% if (String(msg.sender_id) === String(userId)) { %>
+              <!-- Tin nhắn của người gửi (bên phải) -->
+              <div class="sender-message">
+                <div class="chat-message">
+                  <%= msg.message %>
+                  <span class="message-time">
+                    <%= new Date(msg.timestamp).toLocaleTimeString([], {hour:
+                    '2-digit', minute:'2-digit'}) %>
+                  </span>
+                </div>
+              </div>
+              <% } else { %>
+              <!-- Tin nhắn của người nhận (bên trái) -->
+              <div class="receiver-message">
+                <div class="chat-message">
+                  <%= msg.message %>
+                  <span class="message-time">
+                    <%= new Date(msg.timestamp).toLocaleTimeString([], {hour:
+                    '2-digit', minute:'2-digit'}) %>
+                  </span>
+                </div>
+              </div>
+              <% } %> <% }) %> <% } %>
+            </div>
+
+            <div class="chat-footer p-3">
+              <div class="input-group">
+                <button
+                  class="btn btn-light rounded-circle me-2"
+                  title="Thêm tệp đính kèm"
+                >
+                  <i class="fas fa-paperclip"></i>
+                </button>
+                <textarea
+                  id="message-input"
+                  class="form-control"
+                  placeholder="Nhập tin nhắn..."
+                  rows="1"
+                ></textarea>
+                <button id="send-button" class="btn btn-primary rounded-circle">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" href="/css/chat.css" />
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/chat.js" defer></script>
+<script src="/js/chat-detail.js" defer></script>
+<script src="/js/chat-search.js" defer></script>
+
+<!-- Thêm style đặc biệt cho chat -->
+<style>
+  .chat-date-divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .chat-date-divider::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 1px;
+    background: #dee2e6;
+  }
+
+  .chat-date-divider span {
+    background: #f8f9fa;
+    padding: 5px 15px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+  }
+</style>

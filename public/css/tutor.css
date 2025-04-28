@@ -1,0 +1,129 @@
+/* Style cho form đăng ký gia sư */
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Style cho card gia sư */
+.tutor-card {
+  transition: transform 0.3s ease;
+  height: 100%;
+}
+
+.tutor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tutor-card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+/* Style cho badge môn học và cấp lớp */
+.badge {
+  font-size: 0.9rem;
+  padding: 0.5em 1em;
+  margin: 0.2em;
+}
+
+.badge.bg-primary {
+  background-color: #0d6efd !important;
+}
+
+.badge.bg-success {
+  background-color: #198754 !important;
+}
+
+/* Style cho form checkboxes */
+.form-check {
+  margin-bottom: 0.5rem;
+}
+
+.form-check-input:checked {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Style cho ảnh preview */
+#photoPreview {
+  max-width: 200px;
+  max-height: 200px;
+  margin-top: 10px;
+  display: none;
+  border-radius: 5px;
+}
+
+/* Style cho bộ lọc */
+.filter-card {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.filter-card .form-control,
+.filter-card .form-select {
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+}
+
+.filter-card .btn {
+  border-radius: 5px;
+}
+
+/* Style cho phân trang */
+.pagination {
+  margin-top: 30px;
+}
+
+.page-link {
+  color: #0d6efd;
+  border: 1px solid #dee2e6;
+}
+
+.page-item.active .page-link {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Style cho chi tiết gia sư */
+.tutor-detail-card {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.tutor-detail-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.tutor-info-section {
+  margin-bottom: 20px;
+}
+
+.tutor-info-section h6 {
+  color: #495057;
+  margin-bottom: 10px;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 10px;
+  }
+
+  .tutor-card img {
+    height: 150px;
+  }
+
+  .filter-card {
+    padding: 15px;
+  }
+
+  .tutor-detail-card img {
+    height: 200px;
+  }
+}
