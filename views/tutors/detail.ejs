@@ -1,0 +1,64 @@
+<div class="container mt-4">
+  <div class="card shadow-sm p-4">
+    <div class="row">
+      <div class="col-md-4 text-center">
+        <% if (tutor.photo) { %>
+        <img
+          src="<%= tutor.photo %>"
+          class="card-img-top"
+          alt="Ảnh gia sư"
+          style="height: 200px 300px; object-fit: cover"
+        />
+        <% } else { %>
+        <img
+          src="../img/logo.jpg"
+          class="card-img-top"
+          alt="Ảnh mặc định"
+          style="height: 200px 300px; object-fit: cover"
+        />
+        <% } %>
+        <!-- Nút liên hệ dưới ảnh gia sư -->
+        <a
+          href="tel:<%= tutor.phone %>"
+          class="btn btn-primary btn-sm mt-3"
+          style="width: 30%"
+        >
+          Liên hệ
+        </a>
+      </div>
+      <div class="col-md-8">
+        <h2 class="text-primary mb-3"><%= tutor.full_name %></h2>
+        <p><strong>Số điện thoại:</strong> <%= tutor.phone %></p>
+        <p><strong>Năm sinh:</strong> <%= tutor.birth_year %></p>
+        <p>
+          <strong>Giới tính:</strong>
+          <%= tutor.gender === 'male' ? 'Nam' : tutor.gender === 'female' ? 'Nữ'
+          : tutor.gender === 'other' ? 'Không xác định' : 'Không xác định' %>
+        </p>
+        <p>
+          <strong>Địa chỉ:</strong> <%= tutor.address %>, <%= tutor.district %>,
+          <%= tutor.province %>
+        </p>
+        <p>
+          <strong>Lớp dạy:</strong>
+          <span class="badge bg-info text-dark"
+            ><%= tutor.classes_teach %></span
+          >
+        </p>
+        <p>
+          <strong>Môn dạy:</strong>
+          <span class="badge bg-success"><%= tutor.subjects_teach %></span>
+        </p>
+        <p></p><strong>Trình độ:</strong> <%= tutor.education_level === 'high_school' ? 'Tốt nghiệp THPT' : tutor.education_level === 'university' ? 'Đại học' : tutor.education_level === 'graduater' ? 'Sau đại học' : 'Không rõ' %>
+        </p>
+        </p>
+      </div>
+    </div>
+    <hr />
+    <div>
+      <h5 class="text-secondary">Giới thiệu</h5>
+      <p class="text-muted"><%= tutor.introduction %></p>
+    </div>
+    <a href="/tutors" class="btn btn-secondary mt-3">Quay lại</a>
+  </div>
+</div>

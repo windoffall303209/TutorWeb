@@ -1,0 +1,46 @@
+<h1>Chi tiết lớp học</h1>
+<p><strong>Tên phụ huynh:</strong> <%= classObj.parent_name %></p>
+<p><strong>Số điện thoại:</strong> <%= classObj.phone %></p>
+<p>
+  <strong>Địa chỉ:</strong> <%= classObj.specific_address %>, <%=
+  classObj.district %>, <%= classObj.province %>
+</p>
+<p>
+  <strong>Giới tính gia sư yêu cầu:</strong> <%= classObj.tutor_gender ===
+  'male' ? 'Nam' : classObj.tutor_gender === 'female' ? 'Nữ' : 'Bất kỳ' %>
+</p>
+<p><strong>Số buổi/tuần:</strong> <%= classObj.sessions_per_week %></p>
+<p><strong>Phí mỗi buổi:</strong> <%= classObj.fee_per_session %> VNĐ</p>
+<p><strong>Cấp học:</strong> <%= classObj.grade %></p>
+<p><strong>Môn học:</strong> <%= classObj.subject %></p>
+<p><strong>Mô tả:</strong> <%= classObj.description %></p>
+<p>
+  <strong>Hình thức học:</strong> <%= classObj.learning_mode === 'online' ?
+  'Online' : classObj.learning_mode === 'offline' ? 'Offline' :
+  classObj.learning_mode === 'all' ? 'Linh hoạt' : 'Linh hoạt' %>
+</p>
+<p>
+  <strong>Trạng thái:</strong> <%= classObj.status === 'open' ? 'Còn trống' :
+  'Đã nhận' %>
+</p>
+<div class="btn-container">
+  <!-- Nút quay lại -->
+  <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+
+  <!-- Nút liên hệ (gọi điện thoại) -->
+  <a href="tel:+84912345678" class="btn btn-success">Liên hệ</a>
+</div>
+<div class="btn-container">
+  <!-- Nút quay lại -->
+  <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+
+  <!-- Nút liên hệ (gọi điện thoại) -->
+  <a href="tel:+84912345678" class="btn btn-success">Liên hệ</a>
+</div>
+<div class="btn-container">
+  <!-- Nút quay lại -->
+  <a href="javascript:history.back()" class="btn btn-secondary">Quay lại</a>
+
+  <!-- Nút liên hệ (gọi điện thoại) -->
+  <a href="tel:+84912345678" class="btn btn-success">Liên hệ</a>
+</div>

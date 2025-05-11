@@ -1,0 +1,69 @@
+<!-- Tiêu đề trang -->
+<h1 class="contact-heading">Liên hệ</h1>
+
+<!-- Thông tin liên hệ -->
+<div class="contact-info">
+  <p>
+    Email:
+    <a href="mailto:trungtamgiasu@example.com">nvuthanh4@gmail.com</a>
+  </p>
+  <p>Số điện thoại: <a href="tel:0123456789">0358482955</a></p>
+  <p>Địa chỉ: 495 Nguyễn Trãi, Quận Thanh Xuân Nam, Hà Nội</p>
+  <p>Giờ làm việc: Thứ 2 - Thứ 6, 8:00 AM - 5:00 PM</p>
+</div>
+
+<!-- Mạng xã hội -->
+<div class="social-links">
+  <p>Theo dõi chúng tôi trên mạng xã hội:</p>
+  <a href="https://www.facebook.com" target="_blank" class="cus-social-icon">
+    <img src="/img/face.png" alt="Facebook" />
+  </a>
+  <a href="https://www.instagram.com" target="_blank" class="social-icon">
+    <img src="/img/insta.png" alt="Instagram" />
+  </a>
+  <a href="https://zalo.me/123456789" target="_blank" class="social-icon">
+    <img src="/img/zalo.png" alt="Zalo" />
+  </a>
+</div>
+<p></p>
+<!-- Bản đồ Google Maps -->
+<!-- <div class="google-map">
+  <iframe
+    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.892031673436!2d106.6913189149028!3d10.762622992331315!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752e8f6ccf0fbf%3A0x8e94d3c6b47ecb0b!2zMTIzIFRydW5nIFZpZXQsIFQuIFh5LgfdoqUtNGJ0LvvXh0!5e0!3m2!1svi!2s!4v1632445752365!5m2!1svi!2s"
+    width="600"
+    height="450"
+    style="border: 0"
+    allowfullscreen=""
+    loading="lazy"
+  ></iframe>
+</div> -->
+
+<!-- Nút hiển thị form -->
+<% if (typeof user !== 'undefined' && user) { %>
+<div class="contact-actions">
+  <button id="tutorRegisterBtn" class="btn btn-primary me-2">
+    Đăng ký làm gia sư
+  </button>
+  <button id="classRegisterBtn" class="btn btn-primary">
+    Đăng ký tìm gia sư
+  </button>
+</div>
+
+<!-- Khu vực hiển thị form -->
+<div id="registerForms" class="mt-4">
+  <!-- Form đăng ký làm gia sư -->
+  <div id="tutorForm" class="form-container d-none">
+    <%- include('tutorregisterform') %>
+  </div>
+
+  <!-- Form đăng ký tìm gia sư -->
+  <div id="classForm" class="form-container d-none">
+    <%- include('classregisterform') %>
+  </div>
+</div>
+<% } else { %>
+<p>
+  Vui lòng <a href="/auth/login" class="btn btn-primary">đăng nhập</a> để đăng
+  ký.
+</p>
+<% } %>

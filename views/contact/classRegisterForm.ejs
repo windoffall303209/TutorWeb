@@ -1,0 +1,156 @@
+<div class="form-header">
+  <h2 class="form-title">Đăng ký tìm gia sư</h2>
+  <button type="button" class="close-form-btn" data-form="classForm">
+    &times;
+  </button>
+</div>
+<form action="/classes/register" method="POST" class="contact-form">
+  <div class="mb-3">
+    <label for="parent_name" class="form-label">Tên phụ huynh</label>
+    <input
+      type="text"
+      class="form-control"
+      id="parent_name"
+      name="parent_name"
+      required
+    />
+  </div>
+  <div class="mb-3">
+    <label for="phone" class="form-label">Số điện thoại</label>
+    <input type="text" class="form-control" id="phone" name="phone" required />
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="provinceClass" class="form-label">Thành phố</label>
+        <select class="form-select" id="provinceClass" name="province" required>
+          <!-- Dữ liệu sẽ được chèn tự động bởi JavaScript -->
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="districtClass" class="form-label">Quận</label>
+        <select class="form-select" id="districtClass" name="district" required>
+          <!-- Dữ liệu sẽ được chèn tự động bởi JavaScript -->
+        </select>
+      </div>
+    </div>
+  </div>
+  <div>
+    <label for="specific_address" class="form-label">Địa chỉ</label>
+    <input
+      type="text"
+      class="form-control"
+      id="specific_address"
+      name="specific_address"
+      required
+    />
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="sessions_per_week" class="form-label">Số buổi/tuần</label>
+        <input
+          type="text"
+          class="form-control"
+          id="sessions_per_week"
+          name="sessions_per_week"
+          required
+        />
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="fee_per_session" class="form-label">Phí mỗi buổi</label>
+        <input
+          type="text"
+          class="form-control"
+          id="fee_per_session"
+          name="fee_per_session"
+          required
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="subject" class="form-label">Môn học</label>
+        <select class="form-select" id="subject" name="subject" required>
+          <option value="Toán">Toán</option>
+          <option value="Tiếng việt- Ngữ văn">Tiếng việt-Ngữ Văn</option>
+          <option value="Tiếng anh">Tiếng Anh</option>
+          <option value="Vật lý">Vật lý</option>
+          <option value="Hóa học">Hóa học</option>
+          <option value="Sinh học">Sinh học</option>
+          <option value="Lịch sử">Lịch sử</option>
+          <option value="Địa lý">Địa lý</option>
+          <option value="Giáo dục công dân">GDCD</option>
+          <option value="Âm nhạc">Âm nhạc</option>
+          <option value="Mỹ thuật">Mỹ thuật</option>
+          <option value="Giáo dục thể chất - Thể dục">GDTC</option>
+          <option value="Tin học">Tin học</option>
+          <option value="ForeignLanguage">Ngoại ngữ khác</option>
+          <!-- Bạn có thể thêm các môn học khác tại đây -->
+        </select>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="mb-3">
+        <label for="grade" class="form-label">Cấp học</label>
+        <select class="form-select" id="grade" name="grade" required>
+          <option value="1">Lớp 1</option>
+          <option value="2">Lớp 2</option>
+          <option value="3">Lớp 3</option>
+          <option value="4">Lớp 4</option>
+          <option value="5">Lớp 5</option>
+          <option value="6">Lớp 6</option>
+          <option value="7">Lớp 7</option>
+          <option value="8">Lớp 8</option>
+          <option value="9">Lớp 9</option>
+          <option value="10">Lớp 10</option>
+          <option value="11">Lớp 11</option>
+          <option value="12">Lớp 12</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="tutor_gender" class="form-label"
+      >Yêu cầu giới tính gia sư</label
+    >
+    <select class="form-select" id="tutor_gender" name="tutor_gender" required>
+      <option value="male">Nam</option>
+      <option value="female">Nữ</option>
+      <option value="any">Không yêu cầu</option>
+    </select>
+  </div>
+  <div>
+    <label for="learning_mode" class="form-label">Trạng thái</label>
+    <select
+      class="form-select"
+      id="learning_mode"
+      name="learning_mode"
+      required
+    >
+      <option value="online">Online</option>
+      <option value="offline">Offline</option>
+      <option value="all">Linh hoạt</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Mô tả</label>
+    <textarea
+      class="form-control"
+      id="description"
+      name="description"
+      required
+    ></textarea>
+  </div>
+  <p></p>
+  <button type="submit" class="btn btn-primary w-100">Gửi</button>
+</form>

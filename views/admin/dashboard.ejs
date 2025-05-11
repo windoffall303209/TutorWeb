@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <h1>Admin Dashboard</h1>
+  <a href="/" class="btn btn-secondary mb-3">Quay lại</a>
+  <div class="row">
+    <div class="col-md-4">
+      <a href="/admin/users" class="btn btn-primary w-100 mb-3">Quản lý người dùng</a>
+    </div>
+    <div class="col-md-4">
+      <a href="/admin/classes" class="btn btn-primary w-100 mb-3">Quản lý lớp học</a>
+    </div>
+    <div class="col-md-4">
+      <a href="/admin/tutors" class="btn btn-primary w-100 mb-3">Quản lý gia sư</a>
+    </div>
+  </div>
+
+  <!-- Add containers for the charts -->
+  <div class="row">
+    <div class="col-md-4">
+      <canvas id="userChart"></canvas>
+    </div>
+    <div class="col-md-4">
+      <canvas id="classChart"></canvas>
+    </div>
+    <div class="col-md-4">
+      <canvas id="tutorChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Example data, replace with your actual data
+    const userData = {
+      total: 100,
+      active: 70,
+      inactive: 20,
+      admin: 10
+    };
+
+    const classData = {
+      total: 50,
+      available: 30,
+      occupied: 20
+    };
+
+    const tutorData = {
+      total: 40,
+      active: 25,
+      inactive: 15
+    };
+
+    // User Chart
+    const userCtx = document.getElementById('userChart').getContext('2d');
+    new Chart(userCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Admin Users','Users đang hoạt động', 'Users bị vô hiệu hóa',],
+        datasets: [{
+          data: [ userData.admin,userData.active, userData.inactive],
+          backgroundColor: ['#ffcd56','#36a2eb', '#ff6384']
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: `User Accounts (${userData.active + userData.admin}/${userData.total})`
+        }
+      }
+    });
+
+    // Class Chart
+    const classCtx = document.getElementById('classChart').getContext('2d');
+    new Chart(classCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Lớp trống', 'Lớp đã nhận'],
+        datasets: [{
+          data: [classData.available, classData.occupied],
+          backgroundColor: ['#36a2eb', '#ff6384']
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: `Classes (${classData.available}/${classData.total})`
+        }
+      }
+    });
+
+    // Tutor Chart
+    const tutorCtx = document.getElementById('tutorChart').getContext('2d');
+    new Chart(tutorCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Gia sư đang dạy', 'Gia sư đã nghỉ'],
+        datasets: [{
+          data: [tutorData.active, tutorData.inactive],
+          backgroundColor: ['#36a2eb', '#ff6384']
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: `Tutors (${tutorData.active}/${tutorData.total})`
+        }
+      }
+    });
+  </script>
+</body>
+</html>

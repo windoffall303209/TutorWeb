@@ -1,0 +1,127 @@
+<h1>Danh sách gia sư</h1>
+
+<!-- Form tìm kiếm và lọc -->
+<form action="/tutors" method="GET" class="mb-4">
+  <div class="row">
+    <div class="col-md-2 mb-3">
+      <input
+        type="text"
+        class="form-control"
+        name="search"
+        placeholder="Tìm kiếm theo tên"
+      />
+    </div>
+    <div class="custom-col-filter">
+      <select class="form-select" name="gender">
+        <option value="">Giới tính</option>
+        <option value="male">Nam</option>
+        <option value="female">Nữ</option>
+        <option value="other">Khác</option>
+      </select>
+    </div>
+
+    <div class="custom-col-filter">
+      <select class="form-select" name="district">
+        <option value="">Quận</option>
+        <option value="HoanKiem">Hoàn Kiếm</option>
+        <option value="BaDinh">Ba Đình</option>
+        <option value="TanBinh">Tân Bình</option>
+      </select>
+    </div>
+    <div class="col-md-2 mb-3">
+      <select class="form-select" name="education_level">
+        <option value="">Trình độ học vấn</option>
+        <option value="high_school">THPT</option>
+        <option value="university">Đại học</option>
+        <option value="graduater">Sau đại học</option>
+      </select>
+    </div>
+    <div class="col-md-2 mb-3">
+      <select class="form-select" name="subjects_teach">
+        <option value="">Môn dạy</option>
+        <option value="toán">Toán</option>
+        <option value="Anh">Tiếng Anh</option>
+        <option value="Literature">Văn</option>
+        <option value="Physics">Vật lý</option>
+      </select>
+    </div>
+
+    <div class="custom-col-filter">
+      <select class="form-select" name="classes_teach">
+        <option value="">Lớp dạy</option>
+        <option value="1">Lớp 1</option>
+        <option value="2">Lớp 2</option>
+        <option value="3">Lớp 3</option>
+        <option value="4">Lớp 4</option>
+        <option value="5">Lớp 5</option>
+        <option value="6">Lớp 6</option>
+        <option value="7">Lớp 7</option>
+        <option value="8">Lớp 8</option>
+        <option value="9">Lớp 9</option>
+        <option value="10">Lớp 10</option>
+        <option value="11">Lớp 11</option>
+        <option value="12">Lớp 12</option>
+      </select>
+    </div>
+    <div class="custom-col-filter">
+      <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+    </div>
+  </div>
+</form>
+
+<div class="row">
+  <% tutors.forEach(tutor => { %>
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <% if (tutor.photo) { %>
+        <img
+          src="<%= tutor.photo %>"
+          class="card-img-top"
+          alt="<%= tutor.full_name %>"
+        />
+        <% } else { %>
+        <img src="../img/logo.jpg" class="card-img-top" alt="Ảnh mặc định" />
+        <% } %>
+        <p></p>
+        <h5 class="card-title">
+          <a href="/tutors/<%= tutor.id %>" class="text-decoration-none">
+            <%= tutor.full_name %>
+          </a>
+        </h5>
+        <p class="card-text">Năm sinh: <%= tutor.birth_year %></p>
+        <p class="card-text">Môn: <%= tutor.subjects_teach %></p>
+        <p class="card-text">Lớp dạy: <%= tutor.classes_teach %></p>
+        <p class="card-text">
+          Địa chỉ: <%= tutor.address %>, <%= tutor.district %>, <%=
+          tutor.province %>
+        </p>
+      </div>
+    </div>
+  </div>
+  <% }) %>
+</div>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    <% if (currentPage > 1) { %>
+    <li class="page-item">
+      <a class="page-link" href="/tutors?page=<%= currentPage - 1 %>"
+        >Trang trước</a
+      >
+    </li>
+    <% } %> <% for (let i = 1; i <= totalPages; i++) { %>
+    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+      <a class="page-link" href="/tutors?page=<%= i %>"><%= i %></a>
+    </li>
+    <% } %> <% if (currentPage < totalPages) { %>
+    <li class="page-item">
+      <a class="page-link" href="/tutors?page=<%= currentPage + 1 %>"
+        >Trang sau</a
+      >
+    </li>
+    <% } %>
+  </ul>
+</nav>
+
+<a href="/contact" class="btn btn-success">Đăng ký làm gia sư</a>

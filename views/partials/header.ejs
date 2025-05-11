@@ -1,0 +1,58 @@
+<div class="cus-top-bar">
+  <div class="custom-top-bar-container">
+    <span class="custom-top-bar-left"
+      >CHÀO MỪNG ĐẾN VỚI TRUNG TÂM GIA SƯ THÀNH NAM</span
+    >
+    <div class="custom-top-bar-right">
+      <a href="tel:0358482955" class="custom-top-bar-contact"
+        >📞 0358-484-2955</a
+      >
+      <% if (typeof user !== 'undefined' && user) { %> <% if (user.role ===
+      'admin') { %>
+      <a href="/admin" class="top-bar-link">Admin</a>
+      <% } %>
+      <a href="/auth/logout" class="top-bar-link">Đăng xuất</a>
+      <% } else { %>
+      <a href="/auth/login" class="top-bar-link">Đăng nhập</a>
+      <% } %>
+    </div>
+  </div>
+</div>
+<!-- Navbar -->
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container d-flex justify-content-start">
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <img src="/img/logo.jpg" alt="Logo" class="nav-logo" />
+        <span class="ms-2">Thành Nam Tutor</span>
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item custom-nav-item">
+            <a class="nav-link" href="/">Giới thiệu</a>
+          </li>
+          <li class="nav-item custom-nav-item">
+            <a class="nav-link" href="/tutors">Gia sư</a>
+          </li>
+          <li class="nav-item custom-nav-item">
+            <a class="nav-link" href="/classes">Lớp học</a>
+          </li>
+          <li class="nav-item custom-nav-item">
+            <a class="nav-link" href="/contact">Liên hệ</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>

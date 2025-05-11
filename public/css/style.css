@@ -1,0 +1,443 @@
+/* ==============================
+   1. Cấu hình chung cho body
+   ============================== */
+body {
+  background-color: #f4f4f9;
+  color: #333;
+}
+
+/* ==============================
+       2. Top Bar (Thanh trên cùng)
+       ============================== */
+.cus-top-bar {
+  background-color: #00ff11;
+  color: #ffffff;
+  padding: 10px 0;
+  border-bottom: 2px solid #f5051d;
+  will-change: transform;
+}
+
+/* Class để ẩn topbar khi cuộn xuống */
+.cus-top-bar.hidden {
+  transform: translateY(-100%);
+}
+
+/* ==============================
+       3. Header và Navbar
+       ============================== */
+header .navbar {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: padding, background-color;
+  padding: 1px 0;
+}
+
+/* ==============================
+       4. Navbar khi thu gọn
+       ============================== */
+header .navbar.compact {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 5px 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  background-color: rgba(253, 13, 77, 0.95);
+}
+
+/* Thu gọn logo và các phần tử trong header */
+header .navbar.compact .nav-logo {
+  height: 50px;
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+header .navbar.compact .navbar-brand span {
+  font-size: 1rem;
+  transition: font-size 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+header .navbar.compact .nav-link {
+  padding: 5px 10px;
+  transition: padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Đảm bảo nội dung không bị che bởi header cố định */
+body.compact {
+  padding-top: 70px;
+}
+
+/* ==============================
+       5. Custom Top Bar Container
+       ============================== */
+.custom-top-bar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.custom-top-bar-left {
+  font-size: 18px;
+  font-weight: bold;
+  flex: 1;
+}
+
+.custom-top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* ==============================
+       6. Liên kết và Thông tin liên hệ trên Top Bar
+       ============================== */
+.custom-top-bar-contact,
+.top-bar-link {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-out;
+}
+
+.top-bar-link:hover,
+.custom-top-bar-contact:hover {
+  color: #ffcc00;
+  transform: scale(1.05);
+}
+
+/* ==============================
+       7. Navbar Items (Các phần tử trong navbar)
+       ============================== */
+.navbar-nav {
+  display: flex;
+  gap: 20px; /* Tạo khoảng cách giữa các mục trong navbar */
+  padding-left: 30px; /* Đẩy các mục cách lề trái */
+}
+
+.custom-nav-item .nav-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  padding: 10px 15px;
+  border-radius: 5px;
+  background-color: transparent;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    color 0.3s ease-in-out;
+}
+
+.custom-nav-item .nav-link:hover {
+  color: #e0e0e0 !important;
+  transform: scale(1.08);
+}
+
+.custom-nav-item .nav-link:active {
+  transform: scale(0.95);
+}
+
+/* ==============================
+       8. Logo Navbar
+       ============================== */
+.nav-logo {
+  height: 80px;
+  width: auto;
+  margin-right: 10px;
+  border-radius: 50px;
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55),
+    height 0.5s ease-in-out;
+}
+
+/* ==============================
+       9. Cấu hình Navbar Container
+       ============================== */
+.navbar .container {
+  max-width: 1400px;
+  padding-left: 20px;
+}
+
+/* ==============================
+       10. Cấu hình cho Navbar Brand
+       ============================== */
+.navbar-brand {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.navbar-brand span {
+  animation: blink 4s infinite alternate;
+}
+.navbar-brand span {
+  font-size: 1.5rem; /* Kích thước chữ */
+  font-weight: bold; /* Chữ đậm */
+  font-family: "Pacifico", cursive; /* Font chữ tùy chỉnh */
+  color: #ffcc00; /* Màu vàng */
+  text-transform: uppercase; /* Chữ in hoa */
+  letter-spacing: 1px; /* Giãn cách chữ */
+  background: linear-gradient(45deg, #ffcc00, #ff5733);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* 🌟 Contact Heading (Tiêu đề "Liên hệ") 🌟 */
+.contact-heading {
+  color: #007bff; /* Màu xanh dương (giữ đồng bộ với h1) */
+  text-align: center; /* Căn giữa */
+  margin-bottom: 30px; /* Khoảng cách dưới */
+  font-size: 2.5rem; /* Cỡ chữ lớn */
+  font-weight: bold; /* In đậm */
+}
+
+/* 🌟 Contact Info (Thông tin liên hệ) 🌟 */
+.contact-info {
+  text-align: center; /* Căn giữa */
+  margin-bottom: 30px; /* Khoảng cách dưới */
+}
+
+.contact-info p {
+  font-size: 1.1rem; /* Cỡ chữ */
+  color: #333; /* Màu chữ */
+  margin: 10px 0; /* Khoảng cách giữa các dòng */
+}
+
+.contact-info a {
+  color: #007bff; /* Màu liên kết */
+  text-decoration: none; /* Loại bỏ gạch chân */
+}
+
+.contact-info a:hover {
+  color: #0056b3; /* Màu đậm hơn khi hover */
+  text-decoration: underline; /* Thêm gạch chân khi hover */
+}
+
+/* 🌟 Contact Actions (Khu vực nút) 🌟 */
+.contact-actions {
+  text-align: center; /* Căn giữa nút */
+  margin-bottom: 20px; /* Khoảng cách dưới */
+}
+
+/* 🌟 Form Container (Khu vực chứa form) 🌟 */
+.form-container {
+  display: block; /* Hiển thị khi active */
+  transition: opacity 0.3s ease; /* Hiệu ứng mượt khi hiển thị */
+}
+
+/* 🌟 Form Title (Tiêu đề form) 🌟 */
+.form-title {
+  color: #333; /* Màu chữ */
+  font-size: 1.5rem; /* Cỡ chữ */
+  font-weight: bold; /* In đậm */
+  margin-bottom: 20px; /* Khoảng cách dưới */
+  text-align: center; /* Căn giữa */
+}
+
+/* 🌟 Contact Form (Form đăng ký) 🌟 */
+.contact-form {
+  background-color: #fff; /* Màu nền trắng */
+  padding: 20px; /* Khoảng cách bên trong */
+  border-radius: 10px; /* Bo tròn góc */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contact-heading {
+    font-size: 2rem; /* Giảm cỡ chữ */
+  }
+
+  .contact-info p {
+    font-size: 1rem; /* Giảm cỡ chữ */
+  }
+
+  .form-title {
+    font-size: 1.3rem; /* Giảm cỡ chữ */
+  }
+
+  .contact-form {
+    padding: 15px; /* Giảm khoảng cách bên trong */
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-heading {
+    font-size: 1.75rem; /* Giảm cỡ chữ */
+  }
+
+  .contact-info p {
+    font-size: 0.9rem; /* Giảm cỡ chữ */
+  }
+
+  .form-title {
+    font-size: 1.1rem; /* Giảm cỡ chữ */
+  }
+}
+/* 🌟 Form Header (Khu vực chứa tiêu đề và nút đóng) 🌟 */
+.form-header {
+  position: relative; /* Để đặt nút "X" ở góc phải */
+  display: flex; /* Sử dụng Flexbox */
+  justify-content: space-between; /* Đẩy tiêu đề và nút "X" ra hai bên */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  margin-bottom: 20px; /* Khoảng cách dưới */
+}
+
+/* 🌟 Close Form Button (Nút "X") 🌟 */
+.close-form-btn {
+  background: none; /* Không có nền */
+  border: none; /* Không có viền */
+  font-size: 1.5rem; /* Cỡ chữ lớn cho "X" */
+  color: #666; /* Màu chữ */
+  cursor: pointer; /* Con trỏ chuột dạng pointer */
+  position: absolute; /* Đặt vị trí tuyệt đối */
+  right: 10px; /* Khoảng cách từ bên phải */
+  top: 10px; /* Khoảng cách từ trên */
+  transition: color 0.3s ease; /* Hiệu ứng đổi màu mượt */
+}
+
+.close-form-btn:hover {
+  color: #ff0000; /* Đổi màu thành đỏ khi hover */
+}
+
+.close-form-btn:focus {
+  outline: none; /* Loại bỏ viền focus mặc định */
+}
+
+/* Hiệu ứng khi form ẩn */
+.form-container.d-none {
+  display: none; /* Đảm bảo ẩn hoàn toàn */
+}
+.form-container {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+.form-container.d-none {
+  opacity: 0;
+}
+.card-img-top {
+  height: 250px;
+  width: 300px;
+  object-fit: cover;
+  display: block;
+  margin: 0 auto; /* Căn giữa theo chiều ngang */
+  border-radius: 10px; /* Nếu bạn muốn góc ảnh mềm mại */
+}
+/* Custom ô lọc */
+.custom-col-filter {
+  /* Điều chỉnh chiều rộng của cột tại kích thước màn hình trung bình (>=768px) */
+  width: 10.33%;
+  margin-bottom: 2rem; /* Chiếm 1/12 chiều rộng (có thể thay đổi giá trị này tùy theo nhu cầu) */
+}
+.card-text {
+  text-indent: 20px; /* Lùi đầu dòng 20px */
+  /* Hoặc có thể dùng padding-left thay vì text-indent */
+  /* padding-left: 20px; */
+}
+.card-title {
+  text-align: center;
+  color: #007bff; /* Màu mặc định là xanh dương */
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #af9aae;
+}
+.test {
+  text-align: center;
+}
+.center-btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.card-title a:hover {
+  color: #0056b3; /* Màu khi hover (di chuột vào) */
+  text-decoration: underline; /* Gạch chân khi hover */
+}
+/* Tiêu đề trang */
+.contact-heading {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Phần thông tin liên hệ */
+.contact-info {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.contact-info p {
+  font-size: 1rem;
+  color: #555;
+  margin: 10px 0;
+}
+
+.contact-info a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.contact-info a:hover {
+  text-decoration: underline;
+}
+
+/* Mạng xã hội */
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.social-links a {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+}
+
+.social-links img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.social-links p {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Bản đồ Google Map */
+.google-map iframe {
+  width: 100%;
+  height: 400px;
+  border: none;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+.contact-actions button {
+  font-size: 1rem;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Chữ thông báo khi chưa đăng nhập */
+.contact-info p a {
+  font-weight: bold;
+  color: #28a745;
+}

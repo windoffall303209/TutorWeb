@@ -1,0 +1,104 @@
+<h1>Danh sách lớp trống</h1>
+
+<!-- Form tìm kiếm và lọc -->
+<form action="/classes" method="GET" class="mb-4">
+  <div class="row">
+    <div class="col-md-2 mb-3">
+      <select class="form-select" name="subject">
+        <option value="">Môn</option>
+        <option value="toán">Toán</option>
+        <option value="Anh">Tiếng Anh</option>
+        <option value="Literature">Văn</option>
+        <option value="Physics">Vật lý</option>
+        <!-- Thêm các môn khác nếu cần -->
+      </select>
+    </div>
+    <div class="col-md-2 mb-3">
+      <select class="form-select" name="grade">
+        <option value="">Lớp</option>
+        <option value="1">Lớp 1</option>
+        <option value="2">Lớp 2</option>
+        <option value="3">Lớp 3</option>
+        <option value="4">Lớp 4</option>
+        <!-- Thêm các lớp khác nếu cần -->
+      </select>
+    </div>
+    <div class="col-md-2 mb-3">
+      <select class="form-select" name="district">
+        <option value="">Quận</option>
+        <option value="HoanKiem">Hoàn Kiếm</option>
+        <option value="BaDinh">Ba Đình</option>
+        <option value="TanBinh">Tân Bình</option>
+        <!-- Thêm các quận khác nếu cần -->
+      </select>
+    </div>
+    <div class="col-md-2 mb-3">
+      <select class="form-select" name="learning_mode">
+        <option value="">Hình thức học</option>
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
+      </select>
+    </div>
+    <div class="col-md-2 mb-3">
+      <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+    </div>
+  </div>
+</form>
+
+<div class="row">
+  <% classes.forEach(cls => { %>
+  <div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <!-- <h5 class="card-title"><%= cls.subject %> - <%= cls.grade %></h5> -->
+
+        <h4 class="card-title">
+          <a href="/classes/<%= cls.id %>" class="text-decoration-none">
+            <%= cls.subject %> - <%= cls.grade %>
+          </a>
+        </h4>
+        <p class="card-text">Địa chỉ: <%= cls.district %></p>
+        <p class="card-text">Phí: <%= cls.fee_per_session %> VNĐ/buổi</p>
+        <p class="card-text">Số buổi/tuần: <%= cls.sessions_per_week %></p>
+
+        <p class="card-text">
+          Hình thức: <%= cls.learning_mode === 'online' ? 'Online' :
+          cls.learning_mode === 'offline' ? 'Offline' : cls.learning_mode ===
+          'all' ? 'Linh hoạt' : 'Linh hoạt' %>
+        </p>
+        <p class="card-text">
+          Trạng thái: <%= cls.status === 'open' ? 'Còn trống' : 'Đã nhận' %>
+        </p>
+
+        <a href="/classes/<%= cls.id %>" class="btn btn-primary center-btn"
+          >Xem chi tiết
+        </a>
+      </div>
+    </div>
+  </div>
+  <% }) %>
+</div>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    <% if (currentPage > 1) { %>
+    <li class="page-item">
+      <a class="page-link" href="/classes?page=<%= currentPage - 1 %>"
+        >Trang trước</a
+      >
+    </li>
+    <% } %> <% for (let i = 1; i <= totalPages; i++) { %>
+    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+      <a class="page-link" href="/classes?page=<%= i %>"><%= i %></a>
+    </li>
+    <% } %> <% if (currentPage < totalPages) { %>
+    <li class="page-item">
+      <a class="page-link" href="/classes?page=<%= currentPage + 1 %>"
+        >Trang sau</a
+      >
+    </li>
+    <% } %>
+  </ul>
+</nav>
+
+<a href="/contact" class="btn btn-success">Đăng ký lớp mới</a>

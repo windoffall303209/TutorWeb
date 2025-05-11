@@ -1,0 +1,26 @@
+<h1>Sửa gia sư</h1>
+<a href="/admin/tutors" class="btn btn-secondary mb-3">Quay lại</a>
+<form action="/admin/tutors/edit/<%= editTutor.id %>" method="POST">
+    <div class="mb-3">
+        <label for="full_name" class="form-label">Họ tên</label>
+        <input type="text" class="form-control" id="full_name" name="full_name" value="<%= editTutor.full_name %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="birth_year" class="form-label">Năm sinh</label>
+        <input type="number" class="form-control" id="birth_year" name="birth_year" value="<%= editTutor.birth_year %>" required>
+    </div>
+    <div class="mb-3">
+        <label for="gender" class="form-label">Giới tính</label>
+        <select class="form-select" id="gender" name="gender">
+            <option value="male" <%= editTutor.gender === 'male' ? 'selected' : '' %>>Nam</option>
+            <option value="female" <%= editTutor.gender === 'female' ? 'selected' : '' %>>Nữ</option>
+            <option value="other" <%= editTutor.gender === 'other' ? 'selected' : '' %>>Khác</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="subjects_teach" class="form-label">Môn dạy</label>
+        <input type="text" class="form-control" id="subjects_teach" name="subjects_teach" value="<%= editTutor.subjects_teach %>" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Cập nhật</button>
+    <a href="/admin/tutors" class="btn btn-secondary">Hủy</a>
+</form>
