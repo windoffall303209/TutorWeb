@@ -1,110 +1,193 @@
-const db = require("../config/db");
+const dbPromise = require("../config/db");
+const Tutor = require("../models/tutor");
+const Subject = require("../models/subject");
+const Grade = require("../models/grade");
 
-exports.getTutors = (req, res) => {
-  const page = parseInt(req.query.page) || 1;
-  const limit = 9; // Giới hạn 9 gia sư mỗi trang
-  const offset = (page - 1) * limit;
+exports.getTutors = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 9;
+    const offset = (page - 1) * limit;
 
-  const {
-    search,
-    gender,
-    district,
-    education_level,
-    subjects_teach,
-    classes_teach,
-  } = req.query;
+    // Tạo đối tượng filters từ query params
+    const filters = {
+      subjects_teach: req.query.subjects_teach,
+      classes_teach: req.query.classes_teach,
+      gender: req.query.gender,
+      education_level: req.query.education_level,
+      district: req.query.district,
+    };
 
-  let query = "SELECT * FROM tutors WHERE is_active=1";
-  let queryParams = [];
+    // Lấy tổng số gia sư thỏa mãn điều kiện tìm kiếm
+    const totalCount = await Tutor.getSearchCount(filters);
+    const totalPages = Math.ceil(totalCount / limit);
 
-  if (search) {
-    query += " AND full_name LIKE ?";
-    queryParams.push(`%${search}%`);
+    // Lấy danh sách gia sư theo bộ lọc
+    const tutors = await Tutor.search(filters, limit, offset);
+
+    // Lấy danh sách môn học và khối lớp
+    const [subjects] = await dbPromise.query(
+      "SELECT * FROM subjects WHERE is_active = 1"
+    );
+    const [grades] = await dbPromise.query(
+      "SELECT * FROM grades WHERE is_active = 1"
+    );
+
+    // Lấy danh sách quận/huyện từ các gia sư
+    const [districts] = await dbPromise.query(
+      "SELECT DISTINCT district FROM tutors WHERE district IS NOT NULL AND district != ''"
+    );
+
+    res.render("tutors/list", {
+      title: "Danh sách gia sư",
+      tutors,
+      currentPage: page,
+      totalPages,
+      subjects,
+      grades,
+      districts,
+      query: req.query,
+    });
+  } catch (error) {
+    console.error("Error in getTutors:", error);
+    res.status(500).send("Internal Server Error");
   }
-  if (gender) {
-    query += " AND gender = ?";
-    queryParams.push(gender);
-  }
-  if (district) {
-    query += " AND district = ?";
-    queryParams.push(district);
-  }
-  if (education_level) {
-    query += " AND education_level = ?";
-    queryParams.push(education_level);
-  }
-  if (subjects_teach) {
-    query += " AND subjects_teach LIKE ?";
-    queryParams.push(`%${subjects_teach}%`);
-  }
-  if (classes_teach) {
-    query += " AND FIND_IN_SET(?, classes_teach)";
-    queryParams.push(classes_teach);
-  }
-
-  query += " LIMIT ? OFFSET ?";
-  queryParams.push(limit, offset);
-
-  db.query(
-    "SELECT COUNT(*) as total FROM tutors WHERE 1=1",
-    (err, countResult) => {
-      if (err) throw err;
-      const totalTutors = countResult[0].total;
-      const totalPages = Math.ceil(totalTutors / limit);
-
-      db.query(query, queryParams, (err, results) => {
-        if (err) throw err;
-        res.render("tutors/list", {
-          title: "Danh sách gia sư",
-          tutors: results,
-          currentPage: page,
-          totalPages,
-          user: req.session.user,
-        });
-      });
-    }
-  );
 };
 
-exports.getTutorDetail = (req, res) => {
-  const id = req.params.id;
-  db.query("SELECT * FROM tutors WHERE id = ?", [id], (err, results) => {
-    if (err) throw err;
-    if (results.length === 0)
-      return res.status(404).send("Gia sư không tồn tại");
+exports.getTutorDetail = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const tutor = await Tutor.getById(id);
+    if (!tutor) {
+      return res.status(404).send("Tutor not found");
+    }
     res.render("tutors/detail", {
       title: "Chi tiết gia sư",
-      tutor: results[0],
+      tutor,
       user: req.session.user,
     });
-  });
+  } catch (error) {
+    console.error("Error in getTutorDetail:", error);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
-exports.registerTutor = (req, res) => {
-  if (!req.session.user) return res.redirect("/auth/login");
+exports.registerTutor = async (req, res) => {
+  try {
+    const {
+      full_name,
+      birth_year,
+      gender,
+      address,
+      district,
+      province,
+      phone,
+      education_level,
+      introduction,
+      subjectIds,
+      gradeIds,
+    } = req.body;
 
-  const classes_teach = req.body.classes_teach
-    ? req.body.classes_teach.split(",")
-    : [];
+    // Lấy danh sách môn học và khối lớp để có sẵn cho form
+    const [subjects] = await dbPromise.query(
+      "SELECT * FROM subjects WHERE is_active = 1"
+    );
+    const [grades] = await dbPromise.query(
+      "SELECT * FROM grades WHERE is_active = 1"
+    );
 
-  const tutorData = {
-    user_id: req.session.user.id,
-    full_name: req.body.full_name,
-    birth_year: req.body.birth_year,
-    gender: req.body.gender,
-    address: req.body.address,
-    district: req.body.district,
-    province: req.body.province,
-    phone: req.body.phone, // Thêm trường phone
-    classes_teach: classes_teach.join(","), // Lưu trữ dưới dạng chuỗi phân cách bởi dấu phẩy
-    subjects_teach: req.body.subjects_teach,
-    education_level: req.body.education_level,
-    introduction: req.body.introduction,
-    photo: req.file ? `/uploads/${req.file.filename}` : null,
-  };
+    // Kiểm tra các trường bắt buộc
+    if (
+      !full_name ||
+      !birth_year ||
+      !gender ||
+      !address ||
+      !district ||
+      !province ||
+      !phone ||
+      !education_level ||
+      !introduction ||
+      !subjectIds ||
+      !gradeIds
+    ) {
+      return res.render("contact/index", {
+        title: "Đăng ký gia sư",
+        user: req.session.user,
+        error: "Vui lòng điền đầy đủ thông tin.",
+        formData: req.body,
+        subjects,
+        grades,
+        formType: "tutor"
+      });
+    }
 
-  db.query("INSERT INTO tutors SET ?", tutorData, (err) => {
-    if (err) throw err;
-    res.redirect("/tutors");
-  });
+    // Kiểm tra xem người dùng đã đăng ký làm gia sư chưa
+    const db = await dbPromise;
+    const [existingTutor] = await db.query(
+      "SELECT * FROM tutors WHERE user_id = ?",
+      [req.session.user.id]
+    );
+
+    if (existingTutor.length > 0) {
+      console.log("Người dùng đã đăng ký làm gia sư trước đó.");
+      return res.render("registration_result", {
+        title: "Đăng ký gia sư",
+        success: false,
+        message: "Bạn đã đăng ký làm gia sư trước đó.",
+        backUrl: "/contact",
+        user: req.session.user
+      });
+    }
+
+    // Xử lý file ảnh
+    let photoName = null;
+    if (req.file) {
+      const fileExtension = req.file.originalname.split(".").pop();
+      const newFileName = `${req.file.filename}.${fileExtension}`;
+      const fs = require("fs");
+      const oldPath = `public/uploads/${req.file.filename}`;
+      const newPath = `public/uploads/${newFileName}`;
+
+      // Đổi tên file để thêm phần mở rộng
+      fs.renameSync(oldPath, newPath);
+      photoName = newFileName;
+    }
+
+    const tutorData = {
+      user_id: req.session.user.id,
+      full_name,
+      birth_year,
+      gender,
+      address,
+      district,
+      province,
+      phone,
+      education_level,
+      introduction,
+      photo: photoName,
+    };
+
+    const newTutor = await Tutor.create(tutorData, subjectIds, gradeIds);
+    console.log("Đăng ký gia sư thành công:", newTutor);
+    
+    // Trả về trang kết quả với thông báo thành công
+    return res.render("registration_result", {
+      title: "Đăng ký gia sư",
+      success: true,
+      message: "Bạn đã đăng ký làm gia sư thành công. Hồ sơ của bạn đã được ghi nhận vào hệ thống.",
+      backUrl: "/classes",
+      user: req.session.user
+    });
+  } catch (error) {
+    console.error("Error in registerTutor:", error);
+    
+    // Trả về trang kết quả với thông báo lỗi
+    return res.render("registration_result", {
+      title: "Đăng ký gia sư",
+      success: false,
+      message: "Đã xảy ra lỗi khi đăng ký làm gia sư. Vui lòng thử lại sau.",
+      backUrl: "/contact",
+      user: req.session.user
+    });
+  }
 };

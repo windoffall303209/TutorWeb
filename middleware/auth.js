@@ -1,28 +1,26 @@
 const db = require("../config/db");
 
-const checkActiveUser = (req, res, next) => {
-  if (req.session.user) {
-    db.query(
-      "SELECT is_active FROM users WHERE id = ?",
-      [req.session.user.id],
-      (err, results) => {
-        if (err) {
-          console.error("Database error in checkActiveUser:", err);
-          return res.status(500).send("Lỗi hệ thống");
-        }
-        if (results.length === 0 || !results[0].is_active) {
-          req.session.destroy(() => {
-            console.log("User session destroyed due to inactive status");
-            res.redirect("/auth/login");
-          });
-        } else {
-          next();
-        }
-      }
+const authMiddleware = async (req, res, next) => {
+  try {
+    if (!req.session || !req.session.user) {
+      return res.status(401).json({ message: "Unauthorized. Please log in." });
+    }
+
+    const [results] = await db.query(
+      "SELECT is_active FROM Users WHERE id = ?",
+      [req.session.user.id]
     );
-  } else {
-    next(); // Nếu chưa đăng nhập, cho qua (các route công khai như login/register vẫn truy cập được)
+
+    if (!results || results.length === 0 || !results[0].is_active) {
+      return res.status(403).json({ message: "Forbidden. User is inactive." });
+    }
+
+    req.user = req.session.user; // Gắn thông tin user vào request
+    next();
+  } catch (error) {
+    console.error("Error in authMiddleware:", error);
+    res.status(500).json({ message: "Internal server error." });
   }
 };
 
-module.exports = { checkActiveUser };
+module.exports = authMiddleware;

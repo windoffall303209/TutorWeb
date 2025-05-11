@@ -1,0 +1,78 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body text-center p-5">
+          <!-- Icon thành công hoặc thất bại -->
+          <% if (success) { %>
+            <div class="mb-4">
+              <i class="fas fa-check-circle text-success" style="font-size: 64px;"></i>
+            </div>
+            <h2 class="mb-4 fw-bold text-success">Đăng ký thành công</h2>
+          <% } else { %>
+            <div class="mb-4">
+              <i class="fas fa-times-circle text-danger" style="font-size: 64px;"></i>
+            </div>
+            <h2 class="mb-4 fw-bold text-danger">Đăng ký thất bại</h2>
+          <% } %>
+
+          <!-- Thông báo chi tiết -->
+          <p class="lead mb-5"><%= message %></p>
+
+          <!-- Nút quay lại -->
+          <a href="<%= backUrl %>" class="btn btn-primary btn-lg px-5">
+            <i class="fas fa-arrow-left me-2"></i> Quay lại
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Animation cho icon */
+  .fas {
+    animation: fadeIn 0.8s ease;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.5); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  /* Styling cho card */
+  .card {
+    border-radius: 15px;
+    border: none;
+  }
+
+  /* Styling cho button */
+  .btn-primary {
+    border-radius: 30px;
+    padding: 12px 30px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
+<script>
+  // Lấy thông tin và log kết quả đăng ký
+  const pageTitle = '<%= title %>';
+  const registrationType = pageTitle.includes('lớp học') ? 'lớp học' : 'gia sư';
+  const isSuccess = <%= success %>;
+  const resultMessage = '<%= message %>';
+  
+  // Tạo log message
+  const logMessage = isSuccess 
+    ? `Đăng ký ${registrationType} thành công: ${resultMessage}`
+    : `Đăng ký ${registrationType} thất bại: ${resultMessage}`;
+  
+  // Log với màu xanh hoặc đỏ
+  const logStyle = isSuccess ? "color: green; font-weight: bold;" : "color: red; font-weight: bold;";
+  console.log('%c' + logMessage, logStyle);
+</script> 

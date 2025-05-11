@@ -1,23 +1,52 @@
 <div class="cus-top-bar">
   <div class="custom-top-bar-container">
-    <span class="custom-top-bar-left"
-      >CHÀO MỪNG ĐẾN VỚI TRUNG TÂM GIA SƯ THÀNH NAM</span
-    >
+    <span class="custom-top-bar-left">
+      <i class="fas fa-graduation-cap"></i> CHÀO MỪNG ĐẾN VỚI TRUNG TÂM GIA SƯ
+      THÀNH NAM
+    </span>
     <div class="custom-top-bar-right">
-      <a href="tel:0358482955" class="custom-top-bar-contact"
-        >📞 0358-484-2955</a
-      >
-      <% if (typeof user !== 'undefined' && user) { %> <% if (user.role ===
-      'admin') { %>
-      <a href="/admin" class="top-bar-link">Admin</a>
-      <% } %>
-      <a href="/auth/logout" class="top-bar-link">Đăng xuất</a>
+      <a href="tel:0358482955" class="custom-top-bar-contact">
+        <i class="fas fa-phone-alt"></i> 0358-484-2955
+      </a>
+      <% if (typeof user !== 'undefined' && user) { %>
+      <div class="dropdown dropdown-topbar">
+        <a
+          href="#"
+          class="top-bar-link dropdown-toggle"
+          id="userDropdown"
+          role="button"
+          aria-expanded="false"
+        >
+          <i class="fas fa-user-circle"></i> <%= user.username %>
+          <i class="fas fa-chevron-down ms-1 small"></i>
+        </a>
+        <div
+          class="dropdown-menu dropdown-menu-end dropdown-menu-topbar shadow-sm"
+          aria-labelledby="userDropdown"
+        >
+          <% if (user.role === 'admin') { %>
+          <a class="dropdown-item" href="/admin">
+            <i class="fas fa-user-shield me-2"></i> Quản trị
+          </a>
+          <% } %>
+          <a class="dropdown-item" href="/user">
+            <i class="fas fa-user me-2"></i> Tài khoản
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item text-danger" href="/auth/logout">
+            <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+          </a>
+        </div>
+      </div>
       <% } else { %>
-      <a href="/auth/login" class="top-bar-link">Đăng nhập</a>
+      <a href="/auth/login" class="top-bar-link">
+        <i class="fas fa-sign-in-alt"></i> Đăng nhập
+      </a>
       <% } %>
     </div>
   </div>
 </div>
+
 <!-- Navbar -->
 <header>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
@@ -40,19 +69,121 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item custom-nav-item">
-            <a class="nav-link" href="/">Giới thiệu</a>
+            <a class="nav-link" href="/">
+              <i class="fas fa-home"></i> Giới thiệu
+            </a>
           </li>
           <li class="nav-item custom-nav-item">
-            <a class="nav-link" href="/tutors">Gia sư</a>
+            <a class="nav-link" href="/tutors">
+              <i class="fas fa-chalkboard-teacher"></i> Gia sư
+            </a>
           </li>
           <li class="nav-item custom-nav-item">
-            <a class="nav-link" href="/classes">Lớp học</a>
+            <a class="nav-link" href="/classes">
+              <i class="fas fa-book-open"></i> Lớp học
+            </a>
           </li>
+          <% if (typeof user !== 'undefined' && user) { %>
           <li class="nav-item custom-nav-item">
-            <a class="nav-link" href="/contact">Liên hệ</a>
+            <a class="nav-link" href="/chat">
+              <i class="fas fa-comments"></i> Chat
+            </a>
+          </li>
+          <% } %>
+          <li class="nav-item custom-nav-item">
+            <a class="nav-link" href="/contact">
+              <i class="fas fa-envelope"></i> Liên hệ
+            </a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 </header>
+
+<!-- CSS cho Dropdown Topbar -->
+<style>
+  /* Ẩn CSS nội tuyến vì đã chuyển vào file style.css */
+</style>
+
+<!-- Script cho Dropdown Topbar -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Tham chiếu đến các phần tử dropdown
+    const dropdownToggle = document.getElementById("userDropdown");
+    if (!dropdownToggle) return;
+
+    const dropdownMenu = document.querySelector(".dropdown-menu-topbar");
+    if (!dropdownMenu) return;
+
+    const dropdownContainer = document.querySelector(".dropdown-topbar");
+    if (!dropdownContainer) return;
+
+    // Biến để theo dõi trạng thái
+    let isHovering = false;
+    let isMenuOpen = false;
+
+    // Đặt lại vị trí CSS cho dropdown menu
+    dropdownMenu.style.position = "absolute";
+    dropdownMenu.style.top = "100%";
+    dropdownMenu.style.right = "0";
+    dropdownMenu.style.zIndex = "1500";
+    dropdownMenu.style.minWidth = "200px";
+
+    // Xử lý sự kiện hover trên desktop
+    if (window.innerWidth >= 768) {
+      // Mouse enter
+      dropdownContainer.addEventListener("mouseenter", function () {
+        isHovering = true;
+        dropdownMenu.classList.add("show");
+      });
+
+      // Mouse leave
+      dropdownContainer.addEventListener("mouseleave", function () {
+        isHovering = false;
+        if (!isMenuOpen) {
+          dropdownMenu.classList.remove("show");
+        }
+      });
+    }
+
+    // Click trên toggle button (cả desktop và mobile)
+    dropdownToggle.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      isMenuOpen = !isMenuOpen;
+
+      if (isMenuOpen) {
+        dropdownMenu.classList.add("show");
+      } else {
+        if (!isHovering) {
+          dropdownMenu.classList.remove("show");
+        }
+      }
+    });
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener("click", function (e) {
+      if (!dropdownContainer.contains(e.target)) {
+        dropdownMenu.classList.remove("show");
+        isMenuOpen = false;
+      }
+    });
+
+    // Đóng dropdown khi nhấn phím ESC
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        dropdownMenu.classList.remove("show");
+        isMenuOpen = false;
+      }
+    });
+
+    // Reset khi thay đổi kích thước màn hình
+    window.addEventListener("resize", function () {
+      dropdownMenu.classList.remove("show");
+      isHovering = false;
+      isMenuOpen = false;
+    });
+  });
+</script>

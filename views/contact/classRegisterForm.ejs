@@ -78,42 +78,23 @@
   <div class="row">
     <div class="col-md-6">
       <div class="mb-3">
-        <label for="subject" class="form-label">Môn học</label>
-        <select class="form-select" id="subject" name="subject" required>
-          <option value="Toán">Toán</option>
-          <option value="Tiếng việt- Ngữ văn">Tiếng việt-Ngữ Văn</option>
-          <option value="Tiếng anh">Tiếng Anh</option>
-          <option value="Vật lý">Vật lý</option>
-          <option value="Hóa học">Hóa học</option>
-          <option value="Sinh học">Sinh học</option>
-          <option value="Lịch sử">Lịch sử</option>
-          <option value="Địa lý">Địa lý</option>
-          <option value="Giáo dục công dân">GDCD</option>
-          <option value="Âm nhạc">Âm nhạc</option>
-          <option value="Mỹ thuật">Mỹ thuật</option>
-          <option value="Giáo dục thể chất - Thể dục">GDTC</option>
-          <option value="Tin học">Tin học</option>
-          <option value="ForeignLanguage">Ngoại ngữ khác</option>
-          <!-- Bạn có thể thêm các môn học khác tại đây -->
+        <label for="subject_id" class="form-label">Môn học</label>
+        <select class="form-select" id="subject_id" name="subject_id" required>
+          <option value="">Chọn môn học</option>
+          <% subjects.forEach(function(subject) { %>
+          <option value="<%= subject.id %>"><%= subject.name %></option>
+          <% }); %>
         </select>
       </div>
     </div>
     <div class="col-md-6">
       <div class="mb-3">
-        <label for="grade" class="form-label">Cấp học</label>
-        <select class="form-select" id="grade" name="grade" required>
-          <option value="1">Lớp 1</option>
-          <option value="2">Lớp 2</option>
-          <option value="3">Lớp 3</option>
-          <option value="4">Lớp 4</option>
-          <option value="5">Lớp 5</option>
-          <option value="6">Lớp 6</option>
-          <option value="7">Lớp 7</option>
-          <option value="8">Lớp 8</option>
-          <option value="9">Lớp 9</option>
-          <option value="10">Lớp 10</option>
-          <option value="11">Lớp 11</option>
-          <option value="12">Lớp 12</option>
+        <label for="grade_id" class="form-label">Cấp học</label>
+        <select class="form-select" id="grade_id" name="grade_id" required>
+          <option value="">Chọn cấp học</option>
+          <% grades.forEach(function(grade) { %>
+          <option value="<%= grade.id %>"><%= grade.name %></option>
+          <% }); %>
         </select>
       </div>
     </div>
@@ -130,7 +111,7 @@
     </select>
   </div>
   <div>
-    <label for="learning_mode" class="form-label">Trạng thái</label>
+    <label for="learning_mode" class="form-label">Hình thức học</label>
     <select
       class="form-select"
       id="learning_mode"

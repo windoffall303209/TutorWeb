@@ -1,94 +1,111 @@
-<h1>Quản lý gia sư</h1>
-<a href="/admin" class="btn btn-secondary mb-3">Quay lại</a>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Họ tên</th>
-      <th>Môn dạy</th>
-      <th>Trạng thái</th>
-      <th>Hành động</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% tutors.forEach(tutor => { %>
-    <tr>
-      <td><%= tutor.id %></td>
-      <td><%= tutor.full_name %></td>
-      <td><%= tutor.subjects_teach %></td>
-      <td><%= tutor.is_active ? 'Hoạt động' : 'Vô hiệu hóa' %></td>
-      <td>
-        <a
-          href="/admin/tutors/edit/<%= tutor.id %>"
-          class="btn btn-warning btn-sm"
-          >Sửa</a
-        >
-        <form
-          action="/admin/tutors/delete/<%= tutor.id %>"
-          method="POST"
-          style="display: inline"
-        >
-          <button
-            type="submit"
-            class="btn btn-danger btn-sm"
-            onclick="return confirm('Bạn chắc chắn muốn xóa?')"
-          >
-            Xóa
-          </button>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý gia sư</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
+    <div class="container mt-4">
+      <h1>Quản lý gia sư</h1>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="/admin" class="btn btn-secondary">Quay lại</a>
+        <form method="GET" class="d-flex gap-2">
+          <select name="status" class="form-select" onchange="this.form.submit()">
+            <option value="active" <%= status === 'active' ? 'selected' : '' %>>Gia sư đang hoạt động</option>
+            <option value="inactive" <%= status === 'inactive' ? 'selected' : '' %>>Gia sư đã vô hiệu hóa</option>
+            <option value="all" <%= status === 'all' ? 'selected' : '' %>>Tất cả gia sư</option>
+          </select>
         </form>
-        <% if (tutor.is_active) { %>
-        <form
-          action="/admin/tutors/disable/<%= tutor.id %>"
-          method="POST"
-          style="display: inline"
-        >
-          <button
-            type="submit"
-            class="btn btn-secondary btn-sm"
-            onclick="return confirm('Bạn chắc chắn muốn vô hiệu hóa?')"
-          >
-            Vô hiệu hóa
-          </button>
-        </form>
-        <% } else { %>
-        <form
-          action="/admin/tutors/enable/<%= tutor.id %>"
-          method="POST"
-          style="display: inline"
-        >
-          <button
-            type="submit"
-            class="btn btn-success btn-sm"
-            onclick="return confirm('Bạn chắc chắn muốn kích hoạt lại?')"
-          >
-            Kích hoạt lại
-          </button>
-        </form>
-        <% } %>
-      </td>
-    </tr>
-    <% }) %>
-  </tbody>
-</table>
+      </div>
 
-<nav aria-label="Page navigation">
-  <ul class="pagination justify-content-center">
-    <% if (currentPage > 1) { %>
-    <li class="page-item">
-      <a class="page-link" href="/admin/tutors?page=<%= currentPage - 1 %>"
-        >Trang trước</a
-      >
-    </li>
-    <% } %> <% for (let i = 1; i <= totalPages; i++) { %>
-    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-      <a class="page-link" href="/admin/tutors?page=<%= i %>"><%= i %></a>
-    </li>
-    <% } %> <% if (currentPage < totalPages) { %>
-    <li class="page-item">
-      <a class="page-link" href="/admin/tutors?page=<%= currentPage + 1 %>"
-        >Trang sau</a
-      >
-    </li>
-    <% } %>
-  </ul>
-</nav>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th style="width: 5%">ID</th>
+              <th style="width: 25%">Tên gia sư</th>
+              <th style="width: 15%">Số điện thoại</th>
+              <th style="width: 10%">Trạng thái</th>
+              <th style="width: 20%">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% tutors.forEach(function(tutor) { %>
+            <tr>
+              <td><%= tutor.id %></td>
+              <td><%= tutor.full_name %></td>
+              <td><%= tutor.phone %></td>
+              <td>
+                <% if (tutor.is_active) { %>
+                <span class="badge badge-success">Đang hoạt động</span>
+                <% } else { %>
+                <span class="badge badge-danger">Đã vô hiệu hóa</span>
+                <% } %>
+              </td>
+              <td>
+                <a
+                  href="/admin/tutors/edit/<%= tutor.id %>"
+                  class="btn btn-sm btn-primary"
+                  >Sửa</a
+                >
+                <% if (tutor.is_active) { %>
+                <form
+                  action="/admin/tutors/disable/<%= tutor.id %>"
+                  method="POST"
+                  style="display: inline"
+                >
+                  <button type="submit" class="btn btn-sm btn-warning">
+                    Vô hiệu hóa
+                  </button>
+                </form>
+                <% } else { %>
+                <form
+                  action="/admin/tutors/enable/<%= tutor.id %>"
+                  method="POST"
+                  style="display: inline"
+                >
+                  <button type="submit" class="btn btn-sm btn-success">
+                    Kích hoạt
+                  </button>
+                </form>
+                <% } %>
+                <form
+                  action="/admin/tutors/delete/<%= tutor.id %>"
+                  method="POST"
+                  style="display: inline"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-sm btn-danger"
+                    onclick="return confirm('Bạn có chắc chắn muốn xóa gia sư này?')"
+                  >
+                    Xóa
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <% if (totalPages > 1) { %>
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <% for(let i = 1; i <= totalPages; i++) { %>
+          <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+            <a class="page-link" href="?page=<%= i %>"><%= i %></a>
+          </li>
+          <% } %>
+        </ul>
+      </nav>
+      <% } %>
+    </div>
+  </body>
+</html>

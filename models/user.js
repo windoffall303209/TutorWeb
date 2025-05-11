@@ -1,10 +1,32 @@
+const { DataTypes } = require("sequelize");
 const db = require("../config/db");
 
-module.exports = {
-  findByUsername: (username, callback) => {
-    db.query("SELECT * FROM users WHERE username = ?", [username], callback);
+const User = db.define(
+  "User",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    role: {
+      type: DataTypes.ENUM("admin", "tutor", "student"),
+      allowNull: false,
+    },
   },
-  create: (userData, callback) => {
-    db.query("INSERT INTO users SET ?", userData, callback);
-  },
-};
+  {
+    tableName: "users",
+    timestamps: true,
+  }
+);
+
+module.exports = User;

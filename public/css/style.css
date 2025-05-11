@@ -2,19 +2,42 @@
    1. Cấu hình chung cho body
    ============================== */
 body {
-  background-color: #f4f4f9;
+  background-color: #f8f9fa;
   color: #333;
+  height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto", sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+}
+
+html {
+  height: 100%;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+
+main {
+  flex: 1 0 auto;
+  padding-bottom: 50px;
 }
 
 /* ==============================
-       2. Top Bar (Thanh trên cùng)
-       ============================== */
+   2. Top Bar (Thanh trên cùng)
+   ============================== */
 .cus-top-bar {
-  background-color: #00ff11;
+  background: linear-gradient(135deg, #4a90e2 0%, #5a55ae 100%);
   color: #ffffff;
-  padding: 10px 0;
-  border-bottom: 2px solid #f5051d;
+  padding: 8px 0;
+  border-bottom: none;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   will-change: transform;
+  transition: transform 0.3s ease;
+  position: relative;
+  z-index: 1050;
 }
 
 /* Class để ẩn topbar khi cuộn xuống */
@@ -23,17 +46,22 @@ body {
 }
 
 /* ==============================
-       3. Header và Navbar
-       ============================== */
+   3. Header và Navbar
+   ============================== */
 header .navbar {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(to right, #2c3e50, #3498db);
+  transition: all 0.4s ease;
   will-change: padding, background-color;
-  padding: 1px 0;
+  padding: 10px 0;
+  border-bottom: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1040;
 }
 
 /* ==============================
-       4. Navbar khi thu gọn
-       ============================== */
+   4. Navbar khi thu gọn
+   ============================== */
 header .navbar.compact {
   position: fixed;
   top: 0;
@@ -41,24 +69,29 @@ header .navbar.compact {
   width: 100%;
   z-index: 1000;
   padding: 5px 0;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  background-color: rgba(253, 13, 77, 0.95);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(
+    to right,
+    rgba(44, 62, 80, 0.95),
+    rgba(52, 152, 219, 0.95)
+  );
+  backdrop-filter: blur(8px);
 }
 
 /* Thu gọn logo và các phần tử trong header */
 header .navbar.compact .nav-logo {
-  height: 50px;
-  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 40px;
+  transition: all 0.4s ease;
 }
 
 header .navbar.compact .navbar-brand span {
-  font-size: 1rem;
-  transition: font-size 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 0.95rem;
+  transition: all 0.4s ease;
 }
 
 header .navbar.compact .nav-link {
   padding: 5px 10px;
-  transition: padding 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s ease;
 }
 
 /* Đảm bảo nội dung không bị che bởi header cố định */
@@ -67,8 +100,8 @@ body.compact {
 }
 
 /* ==============================
-       5. Custom Top Bar Container
-       ============================== */
+   5. Custom Top Bar Container
+   ============================== */
 .custom-top-bar-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -79,365 +112,864 @@ body.compact {
 }
 
 .custom-top-bar-left {
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight: 600;
   flex: 1;
+  letter-spacing: 0.5px;
 }
 
 .custom-top-bar-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 /* ==============================
-       6. Liên kết và Thông tin liên hệ trên Top Bar
-       ============================== */
+   6. Liên kết và Thông tin liên hệ trên Top Bar
+   ============================== */
 .custom-top-bar-contact,
 .top-bar-link {
-  font-size: 14px;
-  font-weight: bold;
   color: #ffffff;
   text-decoration: none;
-  transition: color 0.3s ease-in-out, transform 0.3s ease-out;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
 }
 
 .top-bar-link:hover,
 .custom-top-bar-contact:hover {
-  color: #ffcc00;
-  transform: scale(1.05);
+  color: #f8e9a1;
+  transform: translateY(-2px);
+  text-decoration: none;
 }
 
 /* ==============================
-       7. Navbar Items (Các phần tử trong navbar)
-       ============================== */
+   6.1. Dropdown Topbar
+   ============================== */
+.dropdown-topbar {
+  position: relative;
+}
+
+.dropdown-menu-topbar {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1500;
+  display: none;
+  min-width: 10rem;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 0.25rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
+}
+
+.dropdown-menu-topbar.show {
+  display: block;
+}
+
+.dropdown-menu-topbar .dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1.5rem;
+  clear: both;
+  font-weight: 400;
+  color: #212529;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.dropdown-menu-topbar .dropdown-item:hover,
+.dropdown-menu-topbar .dropdown-item:focus {
+  color: #16181b;
+  text-decoration: none;
+  background-color: #f8f9fa;
+}
+
+.dropdown-menu-topbar .dropdown-item:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #007bff;
+}
+
+.dropdown-menu-topbar .dropdown-item.active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #007bff;
+}
+
+.dropdown-menu-topbar .dropdown-divider {
+  height: 0;
+  margin: 0.5rem 0;
+  overflow: hidden;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Media query for mobile devices */
+@media (max-width: 767px) {
+  .dropdown-menu-topbar {
+    position: fixed;
+    right: 10px !important;
+    left: auto !important;
+    width: calc(100% - 20px);
+    max-width: 300px;
+  }
+
+  .dropdown-menu-topbar .dropdown-item {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+}
+
+/* ==============================
+   7. Navbar Items (Các phần tử trong navbar)
+   ============================== */
 .navbar-nav {
   display: flex;
-  gap: 20px; /* Tạo khoảng cách giữa các mục trong navbar */
-  padding-left: 30px; /* Đẩy các mục cách lề trái */
+  gap: 15px;
+  padding-left: 30px;
 }
 
 .custom-nav-item .nav-link {
   color: #ffffff !important;
+  text-decoration: none;
   font-weight: 500;
-  padding: 10px 15px;
-  border-radius: 5px;
-  background-color: transparent;
-  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55),
-    color 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  padding: 8px 15px;
+  border-radius: 4px;
+  position: relative;
 }
 
 .custom-nav-item .nav-link:hover {
-  color: #e0e0e0 !important;
-  transform: scale(1.08);
+  color: #f8e9a1 !important;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .custom-nav-item .nav-link:active {
-  transform: scale(0.95);
+  transform: scale(0.97);
+}
+
+.custom-nav-item .nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: #f8e9a1;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.custom-nav-item .nav-link:hover::after {
+  width: 70%;
 }
 
 /* ==============================
-       8. Logo Navbar
-       ============================== */
+   8. Logo Navbar
+   ============================== */
 .nav-logo {
-  height: 80px;
+  height: 60px;
   width: auto;
   margin-right: 10px;
-  border-radius: 50px;
-  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55),
-    height 0.5s ease-in-out;
+  border-radius: 50%;
+  transition: all 0.4s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.nav-logo:hover {
+  transform: rotate(5deg) scale(1.05);
 }
 
 /* ==============================
-       9. Cấu hình Navbar Container
-       ============================== */
+   9. Cấu hình Navbar Container
+   ============================== */
 .navbar .container {
   max-width: 1400px;
   padding-left: 20px;
 }
 
 /* ==============================
-       10. Cấu hình cho Navbar Brand
-       ============================== */
+   10. Cấu hình cho Navbar Brand
+   ============================== */
 .navbar-brand {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s ease;
 }
-@keyframes blink {
+
+@keyframes gradientAnimation {
   0% {
-    opacity: 1;
+    background-position: 0% 50%;
   }
   50% {
-    opacity: 0.5;
+    background-position: 100% 50%;
   }
   100% {
-    opacity: 1;
+    background-position: 0% 50%;
   }
 }
 
 .navbar-brand span {
-  animation: blink 4s infinite alternate;
-}
-.navbar-brand span {
-  font-size: 1.5rem; /* Kích thước chữ */
-  font-weight: bold; /* Chữ đậm */
-  font-family: "Pacifico", cursive; /* Font chữ tùy chỉnh */
-  color: #ffcc00; /* Màu vàng */
-  text-transform: uppercase; /* Chữ in hoa */
-  letter-spacing: 1px; /* Giãn cách chữ */
-  background: linear-gradient(45deg, #ffcc00, #ff5733);
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: "Pacifico", cursive;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(45deg, #ffcc00, #ff5733, #f8e9a1, #ffcc00);
+  background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: gradientAnimation 8s ease infinite;
 }
 
-/* 🌟 Contact Heading (Tiêu đề "Liên hệ") 🌟 */
-.contact-heading {
-  color: #007bff; /* Màu xanh dương (giữ đồng bộ với h1) */
-  text-align: center; /* Căn giữa */
-  margin-bottom: 30px; /* Khoảng cách dưới */
-  font-size: 2.5rem; /* Cỡ chữ lớn */
-  font-weight: bold; /* In đậm */
+/* ==============================
+   11. Card Styling
+   ============================== */
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 25px;
+  background-color: #fff;
 }
 
-/* 🌟 Contact Info (Thông tin liên hệ) 🌟 */
-.contact-info {
-  text-align: center; /* Căn giữa */
-  margin-bottom: 30px; /* Khoảng cách dưới */
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-.contact-info p {
-  font-size: 1.1rem; /* Cỡ chữ */
-  color: #333; /* Màu chữ */
-  margin: 10px 0; /* Khoảng cách giữa các dòng */
-}
-
-.contact-info a {
-  color: #007bff; /* Màu liên kết */
-  text-decoration: none; /* Loại bỏ gạch chân */
-}
-
-.contact-info a:hover {
-  color: #0056b3; /* Màu đậm hơn khi hover */
-  text-decoration: underline; /* Thêm gạch chân khi hover */
-}
-
-/* 🌟 Contact Actions (Khu vực nút) 🌟 */
-.contact-actions {
-  text-align: center; /* Căn giữa nút */
-  margin-bottom: 20px; /* Khoảng cách dưới */
-}
-
-/* 🌟 Form Container (Khu vực chứa form) 🌟 */
-.form-container {
-  display: block; /* Hiển thị khi active */
-  transition: opacity 0.3s ease; /* Hiệu ứng mượt khi hiển thị */
-}
-
-/* 🌟 Form Title (Tiêu đề form) 🌟 */
-.form-title {
-  color: #333; /* Màu chữ */
-  font-size: 1.5rem; /* Cỡ chữ */
-  font-weight: bold; /* In đậm */
-  margin-bottom: 20px; /* Khoảng cách dưới */
-  text-align: center; /* Căn giữa */
-}
-
-/* 🌟 Contact Form (Form đăng ký) 🌟 */
-.contact-form {
-  background-color: #fff; /* Màu nền trắng */
-  padding: 20px; /* Khoảng cách bên trong */
-  border-radius: 10px; /* Bo tròn góc */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Bóng đổ nhẹ */
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .contact-heading {
-    font-size: 2rem; /* Giảm cỡ chữ */
-  }
-
-  .contact-info p {
-    font-size: 1rem; /* Giảm cỡ chữ */
-  }
-
-  .form-title {
-    font-size: 1.3rem; /* Giảm cỡ chữ */
-  }
-
-  .contact-form {
-    padding: 15px; /* Giảm khoảng cách bên trong */
-  }
-}
-
-@media (max-width: 480px) {
-  .contact-heading {
-    font-size: 1.75rem; /* Giảm cỡ chữ */
-  }
-
-  .contact-info p {
-    font-size: 0.9rem; /* Giảm cỡ chữ */
-  }
-
-  .form-title {
-    font-size: 1.1rem; /* Giảm cỡ chữ */
-  }
-}
-/* 🌟 Form Header (Khu vực chứa tiêu đề và nút đóng) 🌟 */
-.form-header {
-  position: relative; /* Để đặt nút "X" ở góc phải */
-  display: flex; /* Sử dụng Flexbox */
-  justify-content: space-between; /* Đẩy tiêu đề và nút "X" ra hai bên */
-  align-items: center; /* Căn giữa theo chiều dọc */
-  margin-bottom: 20px; /* Khoảng cách dưới */
-}
-
-/* 🌟 Close Form Button (Nút "X") 🌟 */
-.close-form-btn {
-  background: none; /* Không có nền */
-  border: none; /* Không có viền */
-  font-size: 1.5rem; /* Cỡ chữ lớn cho "X" */
-  color: #666; /* Màu chữ */
-  cursor: pointer; /* Con trỏ chuột dạng pointer */
-  position: absolute; /* Đặt vị trí tuyệt đối */
-  right: 10px; /* Khoảng cách từ bên phải */
-  top: 10px; /* Khoảng cách từ trên */
-  transition: color 0.3s ease; /* Hiệu ứng đổi màu mượt */
-}
-
-.close-form-btn:hover {
-  color: #ff0000; /* Đổi màu thành đỏ khi hover */
-}
-
-.close-form-btn:focus {
-  outline: none; /* Loại bỏ viền focus mặc định */
-}
-
-/* Hiệu ứng khi form ẩn */
-.form-container.d-none {
-  display: none; /* Đảm bảo ẩn hoàn toàn */
-}
-.form-container {
-  opacity: 1;
-  transition: opacity 0.3s ease;
-}
-.form-container.d-none {
-  opacity: 0;
-}
 .card-img-top {
-  height: 250px;
-  width: 300px;
+  height: 200px;
   object-fit: cover;
-  display: block;
-  margin: 0 auto; /* Căn giữa theo chiều ngang */
-  border-radius: 10px; /* Nếu bạn muốn góc ảnh mềm mại */
+  border-radius: 12px 12px 0 0;
+  transition: all 0.5s ease;
 }
-/* Custom ô lọc */
-.custom-col-filter {
-  /* Điều chỉnh chiều rộng của cột tại kích thước màn hình trung bình (>=768px) */
-  width: 10.33%;
-  margin-bottom: 2rem; /* Chiếm 1/12 chiều rộng (có thể thay đổi giá trị này tùy theo nhu cầu) */
+
+.card:hover .card-img-top {
+  transform: scale(1.05);
 }
-.card-text {
-  text-indent: 20px; /* Lùi đầu dòng 20px */
-  /* Hoặc có thể dùng padding-left thay vì text-indent */
-  /* padding-left: 20px; */
+
+.card-body {
+  padding: 20px;
 }
+
 .card-title {
-  text-align: center;
-  color: #007bff; /* Màu mặc định là xanh dương */
-  font-weight: bold;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #2c3e50;
+}
+
+.card-title a {
+  color: #2c3e50;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.card-title a:hover {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.card-text {
+  color: #6c757d;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ==============================
+   12. Buttons Styling
+   ============================== */
+.btn-primary,
+.btn-outline-primary {
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: none;
   text-transform: uppercase;
-  background-color: #af9aae;
+  letter-spacing: 0.5px;
+  font-size: 0.9rem;
 }
-.test {
-  text-align: center;
+
+.btn-primary {
+  background: linear-gradient(135deg, #4a90e2 0%, #5a55ae 100%);
+  color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #5a55ae 0%, #4a90e2 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-outline-primary {
+  color: #4a90e2;
+  border: 2px solid #4a90e2;
+  background: transparent;
+}
+
+.btn-outline-primary:hover {
+  background-color: #4a90e2;
+  color: white;
+  transform: translateY(-2px);
+}
+
 .center-btn {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
-}
-.card-title a:hover {
-  color: #0056b3; /* Màu khi hover (di chuột vào) */
-  text-decoration: underline; /* Gạch chân khi hover */
-}
-/* Tiêu đề trang */
-.contact-heading {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: bold;
-  margin-bottom: 20px;
-  color: #333;
+  margin-top: 15px;
 }
 
-/* Phần thông tin liên hệ */
+/* ==============================
+   13. Forms Styling
+   ============================== */
+.form-control {
+  border-radius: 6px;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #495057;
+}
+
+.form-container {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.form-title {
+  color: #2c3e50;
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.close-form-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #6c757d;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-form-btn:hover {
+  color: #dc3545;
+  transform: rotate(90deg);
+}
+
+.close-form-btn:focus {
+  outline: none;
+}
+
+/* ==============================
+   14. Contact Section
+   ============================== */
+.contact-heading {
+  color: #2c3e50;
+  font-weight: 700;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.contact-heading::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(135deg, #4a90e2 0%, #5a55ae 100%);
+}
+
 .contact-info {
-  background-color: #f9f9f9;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
   margin-bottom: 30px;
 }
 
 .contact-info p {
-  font-size: 1rem;
-  color: #555;
-  margin: 10px 0;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  color: #495057;
 }
 
 .contact-info a {
-  color: #007bff;
+  color: #4a90e2;
   text-decoration: none;
+  transition: all 0.3s ease;
 }
 
 .contact-info a:hover {
+  color: #5a55ae;
   text-decoration: underline;
 }
 
-/* Mạng xã hội */
-.social-links {
+.contact-info p a {
+  margin-left: 10px;
+  font-weight: 500;
+}
+
+.contact-actions {
   display: flex;
   justify-content: center;
   gap: 15px;
   margin-top: 20px;
 }
 
+.contact-actions button {
+  min-width: 120px;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+}
+
 .social-links a {
   display: inline-block;
-  width: 40px;
-  height: 40px;
-}
-
-.social-links img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.social-links p {
-  font-size: 1rem;
-  color: #555;
-}
-
-/* Bản đồ Google Map */
-.google-map iframe {
-  width: 100%;
-  height: 400px;
-  border: none;
-  border-radius: 8px;
-  margin-top: 20px;
-}
-
-.contact-actions button {
-  font-size: 1rem;
-  padding: 10px 20px;
-  margin: 5px;
-  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-/* Chữ thông báo khi chưa đăng nhập */
-.contact-info p a {
-  font-weight: bold;
-  color: #28a745;
+.social-links img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover img {
+  transform: scale(1.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.social-links p {
+  margin: 0 10px;
+  font-weight: 500;
+  color: #6c757d;
+}
+
+.google-map iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+/* ==============================
+   15. Alerts
+   ============================== */
+.alert {
+  border-radius: 8px;
+  padding: 15px 20px;
+  margin-bottom: 20px;
+  border: none;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-left: 4px solid #dc3545;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-left: 4px solid #28a745;
+}
+
+/* ==============================
+   16. Colors
+   ============================== */
+.text-primary {
+  color: #4a90e2 !important;
+}
+
+.text-secondary {
+  color: #6c757d !important;
+}
+
+.text-success {
+  color: #28a745 !important;
+}
+
+.text-danger {
+  color: #dc3545 !important;
+}
+
+/* ==============================
+   17. Background Colors
+   ============================== */
+.bg-primary {
+  background-color: #4a90e2 !important;
+}
+
+.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+/* ==============================
+   18. Borders
+   ============================== */
+.border-primary {
+  border-color: #4a90e2 !important;
+}
+
+.border-secondary {
+  border-color: #6c757d !important;
+}
+
+.border-success {
+  border-color: #28a745 !important;
+}
+
+.border-danger {
+  border-color: #dc3545 !important;
+}
+
+/* ==============================
+   19. Custom Classes for Filtered Columns
+   ============================== */
+.custom-col-filter {
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* ==============================
+   20. Responsive Adjustments
+   ============================== */
+@media (max-width: 768px) {
+  .custom-top-bar-left {
+    font-size: 14px;
+  }
+
+  .contact-heading {
+    font-size: 1.5rem;
+  }
+
+  .contact-info p {
+    font-size: 0.95rem;
+  }
+
+  .form-title {
+    font-size: 1.3rem;
+  }
+
+  .contact-form {
+    padding: 15px;
+  }
+
+  .navbar-brand span {
+    font-size: 1.2rem;
+  }
+
+  .nav-logo {
+    height: 50px;
+  }
+
+  /* Dropdown Topbar styles for mobile */
+  .dropdown-topbar {
+    position: relative;
+  }
+
+  .dropdown-topbar .dropdown-menu-topbar {
+    position: absolute;
+    width: 200px;
+    min-width: 200px;
+    right: 0;
+    top: calc(100% + 5px);
+    left: auto;
+  }
+
+  .custom-top-bar-right {
+    position: relative;
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-top-bar-left {
+    display: none;
+  }
+
+  .custom-top-bar-right {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .contact-heading {
+    font-size: 1.3rem;
+  }
+
+  .contact-info p {
+    font-size: 0.9rem;
+  }
+
+  .form-title {
+    font-size: 1.2rem;
+  }
+
+  /* Dropdown Topbar styles for small screens */
+  .dropdown-topbar {
+    position: static;
+  }
+
+  .dropdown-topbar .dropdown-menu-topbar {
+    position: absolute;
+    right: 10px;
+    top: 100%;
+    width: auto;
+    min-width: 200px;
+    max-width: calc(100% - 20px);
+  }
+}
+
+/* ==============================
+   21. Footer
+   ============================== */
+footer {
+  background: linear-gradient(to right, #2c3e50, #3498db);
+  color: white;
+  padding: 40px 0 20px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+}
+
+footer h5 {
+  color: #f8e9a1;
+  font-weight: 600;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+footer h5::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background-color: #f8e9a1;
+}
+
+footer ul {
+  padding-left: 0;
+}
+
+footer ul li {
+  margin-bottom: 10px;
+}
+
+footer a {
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.3s ease;
+}
+
+footer a:hover {
+  color: #f8e9a1;
+  text-decoration: none;
+  padding-left: 5px;
+}
+
+/* ==============================
+   22. Animations
+   ============================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+/* Other existing classes */
+.form-container.d-none {
+  display: none;
+}
+
+.form-container {
+  transition: all 0.3s ease;
+}
+
+.form-container.d-none {
+  display: none;
+}
+
+.test {
+  color: red;
+}
+
+/* ==============================
+   23. Hero Section
+   ============================== */
+.hero-section {
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-top: -1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: #f8f9fa;
+  clip-path: polygon(0 0, 100% 100%, 100% 100%, 0% 100%);
+  z-index: 1;
+}
+
+/* ==============================
+   24. Feature Cards
+   ============================== */
+.feature-card {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4a90e2, #5a55ae);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  color: white;
+  font-size: 2rem;
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1) rotate(10deg);
+}
+
+/* ==============================
+   25. CTA Sections
+   ============================== */
+.cta-section {
+  background: linear-gradient(135deg, #4a90e2, #5a55ae);
+  padding: 60px 0;
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(150px, -150px);
+}
+
+.cta-section::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-100px, 100px);
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Test class kept as requested */
+.test {
+  color: red;
 }

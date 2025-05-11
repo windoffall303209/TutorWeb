@@ -31,6 +31,7 @@ router.get("/tutors/edit/:id", adminController.getEditTutor);
 router.post("/tutors/edit/:id", adminController.postEditTutor);
 router.post("/tutors/delete/:id", adminController.deleteTutor);
 router.post("/tutors/disable/:id", adminController.disableTutor);
-router.post("/tutors/enable/:id", adminController.enableTutor); // Thêm route kích hoạt lại
+router.post("/tutors/enable/:id", adminController.enableTutor);
+router.post("/tutors/:id/toggle-status", adminController.toggleTutorStatus);
 
 module.exports = router;

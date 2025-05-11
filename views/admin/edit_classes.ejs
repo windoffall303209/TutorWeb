@@ -1,83 +1,181 @@
-<h1>Sửa lớp học</h1>
-<a href="/admin/classes" class="btn btn-secondary mb-3">Quay lại</a>
-<form action="/admin/classes/edit/<%= editClass.id %>" method="POST">
-  <div class="mb-3">
-    <label for="parent_name" class="form-label">Tên phụ huynh</label>
-    <input
-      type="text"
-      class="form-control"
-      id="parent_name"
-      name="parent_name"
-      value="<%= editClass.parent_name %>"
-      required
-    />
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sửa lớp học</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>Sửa lớp học</h1>
+    <a href="/admin/classes" class="btn btn-secondary mb-3">Quay lại</a>
+
+    <form action="/admin/classes/edit/<%= editClass.id %>" method="POST">
+      <div class="form-group">
+        <label for="parent_name">Tên phụ huynh</label>
+        <input type="text" class="form-control" id="parent_name" name="parent_name" value="<%= editClass.parent_name %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Số điện thoại</label>
+        <input type="tel" class="form-control" id="phone" name="phone" value="<%= editClass.phone %>" required>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="provinceClass" class="form-label">Thành phố</label>
+            <select class="form-select" id="provinceClass" name="province" required>
+              <!-- Dữ liệu sẽ được chèn tự động bởi JavaScript -->
+            </select>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="mb-3">
+            <label for="districtClass" class="form-label">Quận</label>
+            <select class="form-select" id="districtClass" name="district" required>
+              <!-- Dữ liệu sẽ được chèn tự động bởi JavaScript -->
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="specific_address">Địa chỉ cụ thể</label>
+        <input type="text" class="form-control" id="specific_address" name="specific_address" value="<%= editClass.specific_address %>">
+      </div>
+
+      <div class="form-group">
+        <label for="tutor_gender">Giới tính gia sư</label>
+        <select class="form-control" id="tutor_gender" name="tutor_gender" required>
+          <option value="any" <%= editClass.tutor_gender === 'any' ? 'selected' : '' %>>Không yêu cầu</option>
+          <option value="male" <%= editClass.tutor_gender === 'male' ? 'selected' : '' %>>Nam</option>
+          <option value="female" <%= editClass.tutor_gender === 'female' ? 'selected' : '' %>>Nữ</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="sessions_per_week">Số buổi/tuần</label>
+        <input type="number" class="form-control" id="sessions_per_week" name="sessions_per_week" value="<%= editClass.sessions_per_week %>" required min="1">
+      </div>
+
+      <div class="form-group">
+        <label for="fee_per_session">Học phí/buổi (VNĐ)</label>
+        <input type="number" class="form-control" id="fee_per_session" name="fee_per_session" value="<%= editClass.fee_per_session %>" required min="0">
+      </div>
+
+      <div class="form-group">
+        <label for="grade_id">Khối lớp</label>
+        <select class="form-control" id="grade_id" name="grade_id" required>
+          <% grades.forEach(function(grade) { %>
+            <option value="<%= grade.id %>" <%= grade.id === editClass.grade_id ? 'selected' : '' %>><%= grade.name %></option>
+          <% }); %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="subject_id">Môn học</label>
+        <select class="form-control" id="subject_id" name="subject_id" required>
+          <% subjects.forEach(function(subject) { %>
+            <option value="<%= subject.id %>" <%= subject.id === editClass.subject_id ? 'selected' : '' %>><%= subject.name %></option>
+          <% }); %>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Mô tả</label>
+        <textarea class="form-control" id="description" name="description" rows="3"><%= editClass.description %></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="status">Trạng thái</label>
+        <select class="form-control" id="status" name="status" required>
+          <option value="open" <%= editClass.status === 'open' ? 'selected' : '' %>>Đang mở</option>
+          <option value="taken" <%= editClass.status === 'taken' ? 'selected' : '' %>>Đã nhận</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="learning_mode">Hình thức học</label>
+        <select class="form-control" id="learning_mode" name="learning_mode" required>
+          <option value="online" <%= editClass.learning_mode === 'online' ? 'selected' : '' %>>Online</option>
+          <option value="offline" <%= editClass.learning_mode === 'offline' ? 'selected' : '' %>>Offline</option>
+          <option value="both" <%= editClass.learning_mode === 'both' ? 'selected' : '' %>>Cả hai</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="is_active">Trạng thái hoạt động</label>
+        <select class="form-control" id="is_active" name="is_active" required>
+          <option value="1" <%= editClass.is_active === 1 ? 'selected' : '' %>>Hoạt động</option>
+          <option value="0" <%= editClass.is_active === 0 ? 'selected' : '' %>>Không hoạt động</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Cập nhật</button>
+      <a href="/admin/classes" class="btn btn-secondary">Hủy</a>
+    </form>
   </div>
-  <div class="mb-3">
-    <label for="phone" class="form-label">Số điện thoại</label>
-    <input
-      type="text"
-      class="form-control"
-      id="phone"
-      name="phone"
-      value="<%= editClass.phone %>"
-      required
-    />
-  </div>
-  <div class="mb-3">
-    <label for="subject" class="form-label">Môn học</label>
-    <input
-      type="text"
-      class="form-control"
-      id="subject"
-      name="subject"
-      value="<%= editClass.subject %>"
-      required
-    />
-  </div>
-  <div class="mb-3">
-    <label for="grade" class="form-label">Lớp</label>
-    <select class="form-select" id="grade" name="grade" required>
-      <option value="1" <%= editClass.grade === '1' ? 'selected' : '' %>>Lớp 1</option>
-      <option value="2" <%= editClass.grade === '2' ? 'selected' : '' %>>Lớp 2</option>
-      <option value="3" <%= editClass.grade === '3' ? 'selected' : '' %>>Lớp 3</option>
-      <option value="4" <%= editClass.grade === '4' ? 'selected' : '' %>>Lớp 4</option>
-      <option value="5" <%= editClass.grade === '5' ? 'selected' : '' %>>Lớp 5</option>
-      <option value="6" <%= editClass.grade === '6' ? 'selected' : '' %>>Lớp 6</option>
-      <option value="7" <%= editClass.grade === '7' ? 'selected' : '' %>>Lớp 7</option>
-      <option value="8" <%= editClass.grade === '8' ? 'selected' : '' %>>Lớp 8</option>
-      <option value="9" <%= editClass.grade === '9' ? 'selected' : '' %>>Lớp 9</option>
-      <option value="10" <%= editClass.grade === '10' ? 'selected' : '' %>>Lớp 10</option>
-      <option value="11" <%= editClass.grade === '11' ? 'selected' : '' %>>Lớp 11</option>
-      <option value="12" <%= editClass.grade === '12' ? 'selected' : '' %>>Lớp 12</option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label for="fee_per_session" class="form-label">Phí mỗi buổi (VNĐ)</label>
-    <input
-      type="number"
-      class="form-control"
-      id="fee_per_session"
-      name="fee_per_session"
-      value="<%= editClass.fee_per_session %>"
-      required
-    />
-  </div>
-  <div class="mb-3">
-    <label for="learning_mode" class="form-label">Hình thức học</label>
-    <select class="form-select" id="learning_mode" name="learning_mode" required>
-      <option value="online" <%= editClass.learning_mode === 'online' ? 'selected' : '' %>>Online</option>
-      <option value="offline" <%= editClass.learning_mode === 'offline' ? 'selected' : '' %>>Offline</option>
-      <option value="all" <%= editClass.learning_mode === 'all' ? 'selected' : '' %>>Linh hoạt</option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label for="status" class="form-label">Trạng thái</label>
-    <select class="form-select" id="status" name="status" required>
-      <option value="open" <%= editClass.status === 'open' ? 'selected' : '' %>>Còn trống</option>
-      <option value="taken" <%= editClass.status === 'taken' ? 'selected' : '' %>>Đã có người nhận</option>
-    </select>
-  </div>
-  <p></p>
-  <button type="submit" class="btn btn-primary">Cập nhật</button>
-  <a href="/admin/classes" class="btn btn-secondary">Hủy</a>
-</form>
+
+  <script>
+    // Load provinces
+    fetch('/api/provinces')
+      .then(response => response.json())
+      .then(provinces => {
+        const provinceSelect = document.getElementById('provinceClass');
+        provinces.forEach(province => {
+          const option = document.createElement('option');
+          option.value = province.name;
+          option.textContent = province.name;
+          if (province.name === '<%= editClass.province %>') {
+            option.selected = true;
+          }
+          provinceSelect.appendChild(option);
+        });
+      });
+
+    // Load districts when province is selected
+    document.getElementById('provinceClass').addEventListener('change', function() {
+      const province = this.value;
+      const districtSelect = document.getElementById('districtClass');
+      districtSelect.innerHTML = '<option value="">Chọn quận/huyện</option>';
+      
+      if (province) {
+        fetch(`/api/districts?province=${encodeURIComponent(province)}`)
+          .then(response => response.json())
+          .then(districts => {
+            districts.forEach(district => {
+              const option = document.createElement('option');
+              option.value = district.name;
+              option.textContent = district.name;
+              if (district.name === '<%= editClass.district %>') {
+                option.selected = true;
+              }
+              districtSelect.appendChild(option);
+            });
+          });
+      }
+    });
+
+    // Load initial districts if province is selected
+    const initialProvince = document.getElementById('provinceClass').value;
+    if (initialProvince) {
+      fetch(`/api/districts?province=${encodeURIComponent(initialProvince)}`)
+        .then(response => response.json())
+        .then(districts => {
+          const districtSelect = document.getElementById('districtClass');
+          districts.forEach(district => {
+            const option = document.createElement('option');
+            option.value = district.name;
+            option.textContent = district.name;
+            if (district.name === '<%= editClass.district %>') {
+              option.selected = true;
+            }
+            districtSelect.appendChild(option);
+          });
+        });
+    }
+  </script>
+</body>
+</html>
