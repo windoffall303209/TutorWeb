@@ -1,0 +1,41 @@
+
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-4">
+    <h1>Sửa người dùng</h1>
+    <a href="/admin/users" class="btn btn-secondary mb-3">Quay lại</a>
+
+    <form action="/admin/users/edit/<%= editUser.id %>" method="POST">
+      <div class="form-group">
+        <label for="username">Tên đăng nhập</label>
+        <input type="text" class="form-control" id="username" name="username" value="<%= editUser.username %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="<%= editUser.email %>" required>
+      </div>
+
+      <div class="form-group">
+        <label for="role">Vai trò</label>
+        <select class="form-control" id="role" name="role" required>
+          <option value="user" <%= editUser.role === 'user' ? 'selected' : '' %>>Người dùng</option>
+          <option value="admin" <%= editUser.role === 'admin' ? 'selected' : '' %>>Quản trị viên</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="is_active">Trạng thái</label>
+        <select class="form-control" id="is_active" name="is_active" required>
+          <option value="1" <%= editUser.is_active === 1 ? 'selected' : '' %>>Hoạt động</option>
+          <option value="0" <%= editUser.is_active === 0 ? 'selected' : '' %>>Không hoạt động</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Cập nhật</button>
+      <a href="/admin/users" class="btn btn-secondary">Hủy</a>
+    </form>
+  </div>
+</body>

@@ -1,0 +1,22 @@
+{
+  "Hà Nội": [
+    "Hoàn Kiếm",
+    "Ba Đình",
+    "Tây Hồ",
+    "Cầu Giấy",
+    "Đống Đa",
+    "Hai Bà Trưng"
+  ],
+  "TP.HCM": [
+    "Quận 1",
+    "Quận 2",
+    "Quận 3",
+    "Quận 4",
+    "Quận 5",
+    "Quận 7",
+    "Bình Thạnh"
+  ],
+  "Đà Nẵng": ["Hải Châu", "Thanh Khê", "Cẩm Lệ", "Liên Chiểu", "Sơn Trà"],
+  "Hải Phòng": ["Lê Chân", "Ngô Quyền", "Hồng Bàng", "Kiến An", "Dương Kinh"],
+  "Cần Thơ": ["Ninh Kiều", "Cái Răng", "Phong Điền", "Bình Thủy", "Ô Môn"]
+}

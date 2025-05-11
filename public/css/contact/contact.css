@@ -1,0 +1,79 @@
+.hover-card {
+  transition: all 0.3s ease;
+}
+
+.hover-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-icons {
+  display: flex;
+  justify-content: center;
+}
+
+.social-icon-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.social-icon-link:hover {
+  transform: translateY(-5px);
+}
+
+.social-icon-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.social-icon-link:hover .social-icon-circle {
+  transform: scale(1.1);
+}
+
+.stars {
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.star-rating {
+  color: #ccc;
+  transition: color 0.3s ease;
+}
+
+.star-rating.active {
+  color: #ffd700;
+}
+
+.star-rating:hover {
+  color: #ffd700;
+}
+
+.action-btn {
+  transition: all 0.3s ease;
+  border-radius: 30px;
+  min-width: 200px;
+}
+
+.action-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}

@@ -1,0 +1,34 @@
+.border-left-primary {
+  border-left: 4px solid #007bff !important;
+}
+
+.border-left {
+  border-left: 4px solid #007bff !important;
+}
+
+.info-card {
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.badge {
+  transition: all 0.3s ease;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+}
+
+/* Thêm hiệu ứng cho nút */
+.btn {
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}

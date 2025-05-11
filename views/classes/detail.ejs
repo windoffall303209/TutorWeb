@@ -1,0 +1,246 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm mb-4" data-aos="fade-up">
+        <div class="card-header bg-primary text-white">
+          <h1 class="h3 mb-0">
+            <i class="fas fa-chalkboard-teacher me-2"></i>Chi tiết lớp học
+          </h1>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-user text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Tên phụ huynh:</strong>
+                    <p class="mb-0"><%= classObj.parent_name %></p>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-phone-alt text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Số điện thoại:</strong>
+                    <p class="mb-0"><%= classObj.phone %></p>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-map-marker-alt text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Địa chỉ:</strong>
+                    <p class="mb-0">
+                      <%= classObj.specific_address %>, <%= classObj.district
+                      %>, <%= classObj.province %>
+                    </p>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-venus-mars text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Giới tính gia sư yêu cầu:</strong>
+                    <p class="mb-0">
+                      <% if (classObj.tutor_gender === 'male') { %>
+                      <span class="badge bg-info">Nam</span>
+                      <% } else if (classObj.tutor_gender === 'female') { %>
+                      <span class="badge bg-danger">Nữ</span>
+                      <% } else { %>
+                      <span class="badge bg-secondary">Bất kỳ</span>
+                      <% } %>
+                    </p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-calendar-alt text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Số buổi/tuần:</strong>
+                    <p class="mb-0"><%= classObj.sessions_per_week %> buổi</p>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-money-bill-wave text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Phí mỗi buổi:</strong>
+                    <p class="mb-0">
+                      <%= classObj.fee_per_session.toLocaleString('vi-VN') %>
+                      VNĐ
+                    </p>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-graduation-cap text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Cấp học:</strong>
+                    <p class="mb-0"><%= classObj.grade_name %></p>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-book text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Môn học:</strong>
+                    <p class="mb-0"><%= classObj.subject_name %></p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <h5 class="border-bottom pb-2 mb-3">
+              <i class="fas fa-info-circle me-2 text-primary"></i>Thông tin thêm
+            </h5>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="d-flex mb-3">
+                  <i class="fas fa-laptop-house text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Hình thức học:</strong>
+                    <p class="mb-0">
+                      <% if (classObj.learning_mode === 'online') { %>
+                      <span class="badge bg-info">Online</span>
+                      <% } else if (classObj.learning_mode === 'offline') { %>
+                      <span class="badge bg-success">Offline</span>
+                      <% } else { %>
+                      <span class="badge bg-warning text-dark">Linh hoạt</span>
+                      <% } %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="d-flex mb-3">
+                  <i class="fas fa-check-circle text-primary mt-1 me-3"></i>
+                  <div>
+                    <strong>Trạng thái:</strong>
+                    <p class="mb-0">
+                      <% if (classObj.status === 'open') { %>
+                      <span class="badge bg-success">Còn trống</span>
+                      <% } else { %>
+                      <span class="badge bg-secondary">Đã nhận</span>
+                      <% } %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <div class="d-flex">
+                <i class="fas fa-align-left text-primary mt-1 me-3"></i>
+                <div>
+                  <strong>Mô tả:</strong>
+                  <p class="mb-0 mt-2"><%= classObj.description %></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <% if (classObj.tutor_id) { %>
+      <div
+        class="card border-0 shadow-sm mb-4"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        <div class="card-header bg-info text-white">
+          <h3 class="h5 mb-0">
+            <i class="fas fa-user-tie me-2"></i>Thông tin gia sư
+          </h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-user text-info mt-1 me-3"></i>
+                  <div>
+                    <strong>Tên gia sư:</strong>
+                    <p class="mb-0"><%= classObj.tutor_name %></p>
+                  </div>
+                </li>
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-phone-alt text-info mt-1 me-3"></i>
+                  <div>
+                    <strong>Số điện thoại:</strong>
+                    <p class="mb-0"><%= classObj.tutor_phone %></p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex border-0 px-0">
+                  <i class="fas fa-map-marker-alt text-info mt-1 me-3"></i>
+                  <div>
+                    <strong>Địa chỉ:</strong>
+                    <p class="mb-0"><%= classObj.tutor_address %></p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <% if (user && user.id === classObj.user_id) { %>
+          <div class="mt-3 text-center">
+            <a
+              href="/user/classes/<%= classObj.id %>/tutors/<%= classObj.tutor_id %>/edit"
+              class="btn btn-warning"
+            >
+              <i class="fas fa-edit me-2"></i>Chỉnh sửa thông tin gia sư
+            </a>
+          </div>
+          <% } %>
+        </div>
+      </div>
+      <% } %>
+    </div>
+
+    <div class="col-lg-4">
+      <div
+        class="card border-0 shadow-sm sticky-lg-top mb-4"
+        style="top: 85px"
+        data-aos="fade-left"
+      >
+        <div class="card-header bg-white">
+          <h5 class="mb-0 text-center">Tùy chọn</h5>
+        </div>
+        <div class="card-body">
+          <div class="d-grid gap-3 px-3">
+            <!-- Nút quay lại -->
+            <a
+              href="javascript:history.back()"
+              class="btn btn-outline-secondary w-100"
+            >
+              <i class="fas fa-arrow-left me-2"></i>Quay lại
+            </a>
+
+            <!-- Nút liên hệ (gọi điện thoại) -->
+            <a href="tel:<%= classObj.phone %>" class="btn btn-success w-100">
+              <i class="fas fa-phone-alt me-2"></i>Gọi điện
+            </a>
+          </div>
+
+          <div class="card mt-4 border-0 bg-light">
+            <div class="card-body p-3">
+              <h6>
+                <i class="fas fa-info-circle me-2 text-primary"></i>Lưu ý:
+              </h6>
+              <ul class="small mb-0 ps-4">
+                <li>Kiểm tra thông tin lớp học trước khi liên hệ</li>
+                <li>
+                  Để biết thêm thông tin, vui lòng liên hệ trung tâm:
+                  <a href="tel:0358482955">0358-484-2955</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
