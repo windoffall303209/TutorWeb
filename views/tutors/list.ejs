@@ -93,7 +93,7 @@
               <img src="<%= tutor.photo ? '/uploads/' + tutor.photo : '/img/logo.jpg' %>" 
                   class="card-img-top" 
                   alt="Ảnh gia sư <%= tutor.full_name %>"
-                  style="height: 220px; object-fit: cover;">
+                  style="height: 300px; width: 350px; object-fit: cover;">
               <div class="position-absolute top-0 end-0 m-2">
                 <span class="badge bg-<%= tutor.gender === 'male' ? 'info' : 'danger' %> rounded-pill px-3 py-2 shadow-sm">
                   <i class="fas fa-<%= tutor.gender === 'male' ? 'mars' : 'venus' %> me-1"></i>

@@ -37,6 +37,15 @@ app.set("layout", "layouts/main");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+// Thêm middleware để vô hiệu hóa cache của trình duyệt
+app.use((req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  next();
+});
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "your-secret-key",
