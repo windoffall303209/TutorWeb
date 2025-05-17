@@ -1,0 +1,340 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-primary text-white p-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h1 class="h3 mb-0">
+                <i class="fas fa-calendar-alt me-2"></i>Xếp lịch học
+              </h1>
+              <p class="mb-0 mt-2 opacity-75">Lớp <%= classInfo.subject_name %> - <%= classInfo.grade_name %></p>
+            </div>
+            <a href="/classes/<%= classInfo.id %>" class="btn btn-light">
+              <i class="fas fa-arrow-left me-2"></i>Quay lại lớp học
+            </a>
+          </div>
+        </div>
+        
+        <!-- Class info -->
+        <div class="p-4 bg-light border-bottom">
+          <div class="row">
+            <div class="col-md-8">
+              <h5 class="mb-3">Thông tin lớp học</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <p class="mb-2"><strong>Môn học:</strong> <%= classInfo.subject_name %></p>
+                  <p class="mb-2"><strong>Khối lớp:</strong> <%= classInfo.grade_name %></p>
+                  <p class="mb-2"><strong>Phụ huynh:</strong> <%= classInfo.parent_name %></p>
+                  <p class="mb-2"><strong>Số buổi/tuần:</strong> <%= classInfo.sessions_per_week %></p>
+                </div>
+                <div class="col-md-6">
+                  <p class="mb-2"><strong>Học phí:</strong> <%= classInfo.fee_per_session %> VNĐ/buổi</p>
+                  <p class="mb-2">
+                    <strong>Hình thức học:</strong>
+                    <% if (classInfo.learning_mode === 'online') { %>
+                      <span class="badge bg-info">Trực tuyến</span>
+                    <% } else if (classInfo.learning_mode === 'offline') { %>
+                      <span class="badge bg-warning">Tại nhà</span>
+                    <% } else { %>
+                      <span class="badge bg-secondary">Linh hoạt</span>
+                    <% } %>
+                  </p>
+                  <p class="mb-2">
+                    <strong>Gia sư:</strong>
+                    <% if (classInfo.tutor_id) { %>
+                      <%= classInfo.tutor_name %>
+                    <% } else { %>
+                      <span class="text-danger">Chưa có gia sư</span>
+                    <% } %>
+                  </p>
+                  <p class="mb-2"><strong>Địa chỉ:</strong> <%= classInfo.district %>, <%= classInfo.province %></p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 border-start">
+              <h5 class="mb-3">Tóm tắt lịch học</h5>
+              <div class="d-flex align-items-center mb-3">
+                <div class="display-6 me-3 fw-bold text-primary"><%= schedules.length %></div>
+                <div>Buổi học đã lên lịch</div>
+              </div>
+              
+              <% if(schedules.length > 0) { %>
+                <div class="small mb-2">Trạng thái:</div>
+                <div class="progress mb-2" style="height: 8px;">
+                  <% const scheduledCount = schedules.filter(s => s.status === 'scheduled').length; %>
+                  <% const completedCount = schedules.filter(s => s.status === 'completed').length; %>
+                  <% const cancelledCount = schedules.filter(s => s.status === 'cancelled').length; %>
+                  <% const rescheduledCount = schedules.filter(s => s.status === 'rescheduled').length; %>
+                  
+                  <div class="progress-bar bg-primary" style="width: <%= (scheduledCount / schedules.length * 100) %>%" title="Đã lên lịch"></div>
+                  <div class="progress-bar bg-success" style="width: <%= (completedCount / schedules.length * 100) %>%" title="Đã hoàn thành"></div>
+                  <div class="progress-bar bg-danger" style="width: <%= (cancelledCount / schedules.length * 100) %>%" title="Đã hủy"></div>
+                  <div class="progress-bar bg-warning" style="width: <%= (rescheduledCount / schedules.length * 100) %>%" title="Đã dời lịch"></div>
+                </div>
+                <div class="d-flex justify-content-between small text-muted">
+                  <span><%= scheduledCount %> lên lịch</span>
+                  <span><%= completedCount %> hoàn thành</span>
+                  <span><%= cancelledCount %> hủy</span>
+                  <span><%= rescheduledCount %> dời lịch</span>
+                </div>
+              <% } else { %>
+                <div class="alert alert-info">
+                  <i class="fas fa-info-circle me-2"></i>Chưa có buổi học nào được lên lịch
+                </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body p-0">
+          <!-- Schedule form -->
+          <div class="p-4">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="schedule-form">
+                  <h5 class="mb-4">Tạo lịch học mới</h5>
+                  <form id="schedule-form">
+                    <input type="hidden" name="classId" value="<%= classInfo.id %>">
+                    <input type="hidden" name="tutorId" value="<%= classInfo.tutor_id %>">
+                    
+                    <div class="form-group mb-3">
+                      <label for="session-date" class="form-label">Ngày học:</label>
+                      <input type="date" class="form-control" id="session-date" name="sessionDate" required>
+                    </div>
+                    
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="start-time" class="form-label">Giờ bắt đầu:</label>
+                          <input type="time" class="form-control time-picker" id="start-time" name="startTime" required>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group mb-3">
+                          <label for="end-time" class="form-label">Giờ kết thúc:</label>
+                          <input type="time" class="form-control time-picker" id="end-time" name="endTime" required>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <% if (classInfo.learning_mode === 'offline' || classInfo.learning_mode === 'all') { %>
+                      <div class="form-group mb-3">
+                        <label for="location" class="form-label">Địa điểm học:</label>
+                        <input type="text" class="form-control" id="location" name="location" 
+                          placeholder="Nhập địa chỉ cụ thể..."
+                          <%= classInfo.learning_mode === 'offline' ? 'required' : '' %>>
+                      </div>
+                    <% } %>
+                    
+                    <% if (classInfo.learning_mode === 'online' || classInfo.learning_mode === 'all') { %>
+                      <div class="form-group mb-3">
+                        <label for="meeting-url" class="form-label">Link học trực tuyến:</label>
+                        <input type="url" class="form-control" id="meeting-url" name="meetingUrl" 
+                          placeholder="Nhập đường dẫn Zoom, Google Meet..."
+                          <%= classInfo.learning_mode === 'online' ? 'required' : '' %>>
+                      </div>
+                    <% } %>
+                    
+                    <div class="form-group mb-4">
+                      <label for="notes" class="form-label">Ghi chú:</label>
+                      <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Nhập ghi chú về buổi học..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">
+                      <i class="fas fa-calendar-plus me-2"></i>Tạo lịch học
+                    </button>
+                  </form>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="schedule-list">
+                  <h5 class="mb-4">Danh sách lịch học đã tạo</h5>
+                  
+                  <% if (schedules.length === 0) { %>
+                    <div class="text-center py-5">
+                      <img src="/img/no-data.svg" alt="Không có dữ liệu" width="180" class="mb-3">
+                      <h5>Chưa có lịch học nào được tạo</h5>
+                      <p class="text-muted">Sử dụng form bên cạnh để tạo lịch học mới</p>
+                    </div>
+                  <% } else { %>
+                    <div id="schedule-items">
+                      <% schedules.forEach(schedule => { 
+                        const sessionDate = moment(schedule.session_date).format('DD/MM/YYYY');
+                        const startTime = schedule.start_time.substring(0, 5);
+                        const endTime = schedule.end_time.substring(0, 5);
+                      %>
+                        <div class="schedule-list-item">
+                          <div class="schedule-date">
+                            <div class="date-day"><%= sessionDate.split('/')[0] %></div>
+                            <div class="date-month"><%= sessionDate.split('/')[1] %>/<%= sessionDate.split('/')[2] %></div>
+                          </div>
+                          <div class="schedule-info">
+                            <h5><%= startTime %> - <%= endTime %></h5>
+                            <p class="mb-1">
+                              <% if (schedule.status === 'scheduled') { %>
+                                <span class="schedule-badge status-scheduled">Đã lên lịch</span>
+                              <% } else if (schedule.status === 'completed') { %>
+                                <span class="schedule-badge status-completed">Đã hoàn thành</span>
+                              <% } else if (schedule.status === 'cancelled') { %>
+                                <span class="schedule-badge status-cancelled">Đã hủy</span>
+                              <% } else { %>
+                                <span class="schedule-badge status-rescheduled">Đã dời lịch</span>
+                              <% } %>
+                              
+                              <% if (schedule.learning_mode === 'online') { %>
+                                <span class="schedule-badge online-badge">Trực tuyến</span>
+                              <% } else if (schedule.learning_mode === 'offline') { %>
+                                <span class="schedule-badge offline-badge">Tại nhà</span>
+                              <% } %>
+                            </p>
+                            <% if (schedule.location) { %>
+                              <p class="small text-muted mb-0">
+                                <i class="fas fa-map-marker-alt me-1"></i><%= schedule.location %>
+                              </p>
+                            <% } %>
+                          </div>
+                          <div class="schedule-actions">
+                            <button class="btn btn-sm btn-outline-primary show-schedule-details"
+                              data-schedule-id="<%= schedule.id %>"
+                              data-subject="<%= classInfo.subject_name %>"
+                              data-grade="<%= classInfo.grade_name %>"
+                              data-tutor-name="<%= classInfo.tutor_name %>"
+                              data-date="<%= sessionDate %>"
+                              data-start-time="<%= startTime %>"
+                              data-end-time="<%= endTime %>"
+                              data-location="<%= schedule.location || '' %>"
+                              data-meeting-url="<%= schedule.meeting_url || '' %>"
+                              data-status="<%= schedule.status %>"
+                              data-notes="<%= schedule.notes || '' %>"
+                            >
+                              <i class="fas fa-eye"></i>
+                            </button>
+                            
+                            <% if (schedule.status === 'scheduled') { %>
+                              <button class="btn btn-sm btn-outline-success open-status-modal"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#statusModal"
+                                data-schedule-id="<%= schedule.id %>"
+                                data-status="completed"
+                                data-title="<%= classInfo.subject_name %> (<%= sessionDate %>)"
+                              >
+                                <i class="fas fa-check"></i>
+                              </button>
+                              
+                              <button class="btn btn-sm btn-outline-danger open-status-modal"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#statusModal"
+                                data-schedule-id="<%= schedule.id %>"
+                                data-status="cancelled"
+                                data-title="<%= classInfo.subject_name %> (<%= sessionDate %>)"
+                              >
+                                <i class="fas fa-times"></i>
+                              </button>
+                              
+                              <button class="btn btn-sm btn-outline-warning open-status-modal"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#statusModal"
+                                data-schedule-id="<%= schedule.id %>"
+                                data-status="rescheduled"
+                                data-title="<%= classInfo.subject_name %> (<%= sessionDate %>)"
+                              >
+                                <i class="fas fa-exchange-alt"></i>
+                              </button>
+                            <% } %>
+                          </div>
+                        </div>
+                      <% }); %>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Status Modal -->
+<div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="statusModalLabel">Cập nhật trạng thái</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="schedule-status-notes" class="form-label">Ghi chú (không bắt buộc):</label>
+          <textarea class="form-control" id="schedule-status-notes" rows="4" placeholder="Nhập ghi chú..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+        <button type="button" class="btn btn-primary" id="confirm-status-btn">Cập nhật</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Detail Modal -->
+<div class="modal fade schedule-detail-modal" id="scheduleDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detail-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-4">
+          <span class="badge" id="detail-status"></span>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Ngày học:</div>
+          <div class="item-value" id="detail-date"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Thời gian:</div>
+          <div class="item-value" id="detail-time"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Gia sư:</div>
+          <div class="item-value" id="detail-tutor"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Địa điểm học:</div>
+          <div class="item-value" id="detail-location"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Link học trực tuyến:</div>
+          <div class="item-value" id="detail-meeting"></div>
+        </div>
+        
+        <div class="schedule-notes">
+          <h6><i class="fas fa-sticky-note me-2"></i>Ghi chú</h6>
+          <div id="detail-notes"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Link stylesheet -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="/css/schedule.css">
+
+<!-- JavaScript dependencies -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/vn.js"></script>
+<script src="/js/schedule.js"></script> 

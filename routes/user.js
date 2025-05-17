@@ -190,4 +190,10 @@ router.get("/change-password", authMiddleware, (req, res) => {
 // Route để xử lý đổi mật khẩu
 router.post("/change-password", authMiddleware, userController.changePassword);
 
+// Route để hiển thị danh sách lớp học đã tạo
+router.get("/classes/created", authMiddleware, userController.getCreatedClasses);
+
+// Route để hiển thị danh sách lớp học đã nhận dạy (dành cho gia sư)
+router.get("/classes/registered", authMiddleware, userController.getRegisteredClasses);
+
 module.exports = router;

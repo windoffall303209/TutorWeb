@@ -1,0 +1,106 @@
+<!-- Display classes registered by the tutor -->
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-primary text-white">
+          <h1 class="h4 mb-0"><i class="fas fa-chalkboard-teacher me-2"></i>Lớp học đã nhận</h1>
+        </div>
+        <div class="card-body">
+          <% if (registrations && registrations.length > 0) { %>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Môn học</th>
+                    <th>Lớp</th>
+                    <th>Học phí</th>
+                    <th>Số buổi/tuần</th>
+                    <th>Địa điểm</th>
+                    <th>Phụ huynh</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% registrations.forEach(function(reg) { %>
+                    <tr>
+                      <td><%= reg.subject_name %></td>
+                      <td><%= reg.grade_name %></td>
+                      <td><%= reg.fee_per_session.toLocaleString('vi-VN') %> VNĐ</td>
+                      <td><%= reg.sessions_per_week %></td>
+                      <td>
+                        <%= reg.district %>, <%= reg.province %>
+                        <% if (reg.learning_mode === 'online') { %>
+                          <span class="badge bg-info">Online</span>
+                        <% } else if (reg.learning_mode === 'offline') { %>
+                          <span class="badge bg-success">Offline</span>
+                        <% } else { %>
+                          <span class="badge bg-warning text-dark">Linh hoạt</span>
+                        <% } %>
+                      </td>
+                      <td><%= reg.parent_username || reg.parent_name %></td>
+                      <td>
+                        <% if (reg.status === 'pending') { %>
+                          <span class="badge bg-warning text-dark">Chờ duyệt</span>
+                        <% } else if (reg.status === 'accepted') { %>
+                          <span class="badge bg-success">Đã chấp nhận</span>
+                        <% } else if (reg.status === 'rejected') { %>
+                          <span class="badge bg-danger">Đã từ chối</span>
+                        <% } else { %>
+                          <span class="badge bg-secondary">Không xác định</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <div class="btn-group" role="group">
+                          <a href="/classes/<%= reg.class_id %>" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                            <i class="fas fa-eye"></i>
+                          </a>
+                          <a href="/chat?receiverId=<%= reg.user_id %>" class="btn btn-sm btn-outline-info" title="Chat với phụ huynh">
+                            <i class="fas fa-comments"></i>
+                          </a>
+                          <% if (reg.status === 'accepted') { %>
+                            <a href="/schedules/create/<%= reg.class_id %>" class="btn btn-sm btn-outline-success" title="Quản lý lịch học">
+                              <i class="fas fa-calendar-alt"></i>
+                            </a>
+                          <% } %>
+                        </div>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i>Bạn chưa đăng ký nhận dạy lớp học nào.
+              <a href="/classes" class="btn btn-primary ms-3">
+                <i class="fas fa-search me-2"></i>Tìm kiếm lớp học
+              </a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hiển thị ghi chú và thông tin về trạng thái -->
+<div class="container-fluid py-2">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h5><i class="fas fa-info-circle me-2 text-primary"></i>Lưu ý:</h5>
+          <ul>
+            <li>Khi đăng ký nhận dạy lớp học, trạng thái ban đầu sẽ là <span class="badge bg-warning text-dark">Chờ duyệt</span></li>
+            <li>Phụ huynh sẽ xem xét hồ sơ của bạn và quyết định chấp nhận hoặc từ chối yêu cầu đăng ký.</li>
+            <li>Nếu được <span class="badge bg-success">Chấp nhận</span>, bạn có thể bắt đầu quản lý lịch học và dạy học cho lớp đó.</li>
+            <li>Nếu bị <span class="badge bg-danger">Từ chối</span>, bạn có thể tiếp tục tìm kiếm lớp học khác.</li>
+            <li>Bạn có thể liên hệ trực tiếp với phụ huynh thông qua tính năng chat.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

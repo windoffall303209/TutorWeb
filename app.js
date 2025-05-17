@@ -10,6 +10,8 @@ const classRoutes = require("./routes/class");
 const adminRoutes = require("./routes/admin");
 const userRoutes = require("./routes/user");
 const chatRoutes = require("./routes/chat");
+const scheduleRoutes = require("./routes/schedule");
+const ratingRoutes = require("./routes/rating");
 const http = require("http");
 const { Server } = require("socket.io");
 const dbPromise = require("./config/db");
@@ -36,6 +38,7 @@ console.log(
   path.join(__dirname, "views", "layouts", "main.ejs")
 );
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   session({
@@ -63,6 +66,8 @@ app.use("/classes", classRoutes);
 app.use("/admin", adminRoutes);
 app.use("/user", userRoutes);
 app.use("/chat", chatRoutes);
+app.use("/schedules", scheduleRoutes);
+app.use("/ratings", ratingRoutes);
 
 // Trang chủ và liên hệ
 app.get("/", (req, res) => {

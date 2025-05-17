@@ -1,0 +1,235 @@
+/* CSS for Tutor Rating */
+
+.rating-section {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.rating-overview {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.rating-average {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #4a90e2, #5a55ae);
+  border-radius: 50%;
+  color: #fff;
+  box-shadow: 0 5px 15px rgba(90, 85, 174, 0.2);
+  margin-right: 30px;
+}
+
+.rating-average .rating-score {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.rating-average .rating-count {
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.rating-distribution {
+  flex: 1;
+}
+
+.rating-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.rating-label {
+  min-width: 30px;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.rating-progress {
+  flex: 1;
+  height: 10px;
+  background-color: #e9ecef;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.rating-progress-inner {
+  height: 100%;
+  background: linear-gradient(to right, #63b3ed, #4a90e2);
+  border-radius: 10px;
+}
+
+.rating-percentage {
+  width: 40px;
+  font-size: 0.85rem;
+  text-align: right;
+  color: #6c757d;
+}
+
+.rating-form {
+  margin: 30px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #e9ecef;
+}
+
+.rating-form-header {
+  margin-bottom: 20px;
+}
+
+.rating-form-header h4 {
+  margin-bottom: 10px;
+}
+
+.rating-stars {
+  margin-bottom: 20px;
+  direction: rtl;
+  unicode-bidi: bidi-override;
+  text-align: left;
+}
+
+.rating-stars input {
+  display: none;
+}
+
+.rating-stars label {
+  display: inline-block;
+  color: #ccc;
+  font-size: 2rem;
+  padding: 0 5px;
+  cursor: pointer;
+}
+
+.rating-stars label:before {
+  content: "\2605";
+}
+
+.rating-stars input:checked ~ label,
+.rating-stars input:hover ~ label {
+  color: #f9ca24;
+}
+
+.rating-comment {
+  margin-bottom: 20px;
+}
+
+.rating-comment textarea {
+  width: 100%;
+  border: 1px solid #ced4da;
+  border-radius: 5px;
+  padding: 15px;
+  resize: none;
+  min-height: 120px;
+}
+
+.rating-submit {
+  text-align: right;
+}
+
+.rating-items {
+  margin-top: 30px;
+}
+
+.rating-item {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  transition: all 0.3s ease;
+}
+
+.rating-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.rating-item-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.rating-user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  color: #495057;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+.rating-user-info {
+  flex: 1;
+}
+
+.rating-user-name {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.rating-date {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.rating-stars-display {
+  color: #f9ca24;
+  margin-right: 10px;
+}
+
+.rating-content {
+  margin-top: 10px;
+  color: #212529;
+  line-height: 1.6;
+}
+
+.rating-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.no-ratings-message {
+  padding: 40px 20px;
+  text-align: center;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  color: #6c757d;
+}
+
+.no-ratings-icon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  color: #adb5bd;
+}
+
+.user-rating-highlight {
+  background-color: #e7f5ff;
+  border-left: 4px solid #4a90e2;
+}
+
+/* Star ratings */
+.stars-display {
+  color: #f9ca24;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+} 

@@ -1,0 +1,231 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-primary text-white p-4">
+          <h1 class="h3 mb-0">
+            <i class="fas fa-clipboard-list me-2"></i>Danh sách lớp đã đăng ký
+          </h1>
+          <p class="mb-0 mt-2 opacity-75">Theo dõi trạng thái đăng ký nhận lớp của bạn</p>
+        </div>
+        <div class="card-body p-0">
+          <!-- Filter and search -->
+          <div class="p-4 bg-light border-bottom">
+            <div class="row">
+              <div class="col-md-4">
+                <select class="form-select" id="status-filter">
+                  <option value="all">Tất cả trạng thái</option>
+                  <option value="pending">Đang chờ xét duyệt</option>
+                  <option value="accepted">Đã được chấp nhận</option>
+                  <option value="rejected">Đã bị từ chối</option>
+                </select>
+              </div>
+              <div class="col-md-8">
+                <div class="input-group">
+                  <input type="text" class="form-control" placeholder="Tìm kiếm lớp học..." id="search-input">
+                  <button class="btn btn-outline-primary" type="button" id="search-button">
+                    <i class="fas fa-search"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Registration list -->
+          <div class="p-4">
+            <% if (registrations.length === 0) { %>
+              <div class="text-center py-5">
+                <img src="/img/no-data.svg" alt="Không có dữ liệu" width="180" class="mb-3">
+                <h5>Bạn chưa đăng ký lớp học nào</h5>
+                <p class="text-muted">Hãy tìm kiếm và đăng ký các lớp học phù hợp với bạn</p>
+                <a href="/classes" class="btn btn-primary">
+                  <i class="fas fa-search me-2"></i>Tìm lớp học
+                </a>
+              </div>
+            <% } else { %>
+              <div id="registration-list">
+                <% registrations.forEach(registration => { %>
+                  <div class="registration-card" data-status="<%= registration.status %>">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <div>
+                        <h5 class="mb-1"><%= registration.subject_name %> - <%= registration.grade_name %></h5>
+                        <div>
+                          <span class="class-info-badge">
+                            <i class="fas fa-map-marker-alt me-1"></i><%= registration.district %>, <%= registration.province %>
+                          </span>
+                          <span class="class-info-badge">
+                            <i class="fas fa-calendar-alt me-1"></i><%= registration.sessions_per_week %> buổi/tuần
+                          </span>
+                          <span class="class-info-badge">
+                            <i class="fas fa-money-bill-wave me-1"></i><%= registration.fee_per_session %> VNĐ/buổi
+                          </span>
+                        </div>
+                      </div>
+                      <div>
+                        <% if (registration.status === 'pending') { %>
+                          <span class="registration-status status-pending">Đang chờ</span>
+                        <% } else if (registration.status === 'accepted') { %>
+                          <span class="registration-status status-accepted">Đã được chấp nhận</span>
+                        <% } else { %>
+                          <span class="registration-status status-rejected">Đã bị từ chối</span>
+                        <% } %>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-8">
+                          <p class="mb-2">
+                            <strong>Phụ huynh:</strong> <%= registration.parent_name %> (<%= registration.parent_username %>)
+                          </p>
+                          <p class="mb-2">
+                            <strong>Hình thức học:</strong> 
+                            <% if (registration.learning_mode === 'online') { %>
+                              <span class="badge bg-info">Trực tuyến</span>
+                            <% } else if (registration.learning_mode === 'offline') { %>
+                              <span class="badge bg-warning">Tại nhà</span>
+                            <% } else { %>
+                              <span class="badge bg-secondary">Linh hoạt</span>
+                            <% } %>
+                          </p>
+                          <% if (registration.notes) { %>
+                            <div class="registration-notes">
+                              <strong>Ghi chú của phụ huynh:</strong> <%= registration.notes %>
+                            </div>
+                          <% } %>
+                          <p class="registration-time mt-3">
+                            <i class="fas fa-clock me-1"></i>Đăng ký vào: 
+                            <%= new Date(registration.request_date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                          </p>
+                        </div>
+                        <div class="col-md-4 border-start">
+                          <div class="d-flex flex-column h-100 justify-content-between">
+                            <div>
+                              <% if (registration.status === 'accepted') { %>
+                                <div class="alert alert-success mb-3">
+                                  <i class="fas fa-check-circle me-2"></i>Chúc mừng! Bạn đã được chọn dạy lớp này.
+                                </div>
+                                <a href="/chat?receiverId=<%= registration.user_id %>" class="btn btn-outline-primary w-100 mb-2">
+                                  <i class="fas fa-comments me-2"></i>Liên hệ phụ huynh
+                                </a>
+                                <a href="/schedules/create/<%= registration.class_id %>" class="btn btn-primary w-100">
+                                  <i class="fas fa-calendar-plus me-2"></i>Xếp lịch học
+                                </a>
+                              <% } else if (registration.status === 'rejected') { %>
+                                <div class="alert alert-danger">
+                                  <i class="fas fa-times-circle me-2"></i>Đăng ký của bạn đã bị từ chối.
+                                  <% if (registration.response_date) { %>
+                                    <div class="small mt-2">
+                                      Ngày phản hồi: <%= new Date(registration.response_date).toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+                                    </div>
+                                  <% } %>
+                                </div>
+                                <a href="/classes" class="btn btn-outline-primary w-100">
+                                  <i class="fas fa-search me-2"></i>Tìm lớp khác
+                                </a>
+                              <% } else { %>
+                                <div class="alert alert-warning mb-3">
+                                  <i class="fas fa-hourglass-half me-2"></i>Đăng ký của bạn đang được xem xét.
+                                </div>
+                                <button class="btn btn-outline-secondary w-100" disabled>
+                                  <i class="fas fa-spinner me-2"></i>Đang chờ phản hồi
+                                </button>
+                              <% } %>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+
+          <!-- Pagination if needed -->
+          <!-- <div class="p-3 border-top">
+            <nav aria-label="Page navigation">
+              <ul class="pagination justify-content-center mb-0">
+                <li class="page-item disabled">
+                  <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Trước</a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#">Tiếp</a>
+                </li>
+              </ul>
+            </nav>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Link stylesheet -->
+<link rel="stylesheet" href="/css/class-register.css">
+
+<!-- JavaScript for filtering and searching -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Filter by status
+    const statusFilter = document.getElementById('status-filter');
+    const searchInput = document.getElementById('search-input');
+    const registrationCards = document.querySelectorAll('.registration-card');
+    
+    if (statusFilter) {
+      statusFilter.addEventListener('change', filterRegistrations);
+    }
+    
+    if (searchInput) {
+      searchInput.addEventListener('input', filterRegistrations);
+    }
+    
+    function filterRegistrations() {
+      const statusValue = statusFilter.value;
+      const searchValue = searchInput.value.toLowerCase();
+      
+      registrationCards.forEach(card => {
+        const status = card.dataset.status;
+        const content = card.textContent.toLowerCase();
+        
+        const statusMatch = statusValue === 'all' || status === statusValue;
+        const searchMatch = searchValue === '' || content.includes(searchValue);
+        
+        if (statusMatch && searchMatch) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      
+      // Show no results message if needed
+      const visibleCards = [...registrationCards].filter(card => card.style.display !== 'none');
+      const registrationList = document.getElementById('registration-list');
+      
+      if (visibleCards.length === 0 && registrationList) {
+        // Check if no results message exists
+        let noResults = document.getElementById('no-results-message');
+        
+        if (!noResults) {
+          noResults = document.createElement('div');
+          noResults.id = 'no-results-message';
+          noResults.className = 'no-results-message text-center py-4';
+          noResults.innerHTML = `
+            <i class="fas fa-search fa-2x text-muted mb-3"></i>
+            <h5>Không tìm thấy kết quả</h5>
+            <p>Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm</p>
+          `;
+          
+          registrationList.appendChild(noResults);
+        }
+      } else {
+        const noResults = document.getElementById('no-results-message');
+        if (noResults) {
+          noResults.remove();
+        }
+      }
+    }
+  });
+</script> 

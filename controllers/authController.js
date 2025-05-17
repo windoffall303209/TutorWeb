@@ -27,26 +27,47 @@ exports.login = async (req, res) => {
       });
     }
     if (await bcrypt.compare(password, user.password)) {
-      req.session.user = {
+      console.log("Login successful");
+      
+      // Kiểm tra xem người dùng có phải là gia sư không
+      const [tutorResults] = await db.query(
+        "SELECT id FROM Tutors WHERE user_id = ?",
+        [user.id]
+      );
+      
+      const userSession = {
         id: user.id,
         username: user.username,
-        display_name: user.display_name,
         role: user.role,
+        is_tutor: tutorResults.length > 0 // Thêm thuộc tính is_tutor vào session
       };
-      console.log("Login successful, redirecting...");
-      if (user.role === "admin") return res.redirect("/admin");
-      return res.redirect("/tutors");
+      
+      req.session.user = userSession;
+      
+      if (req.query.returnUrl) {
+        return res.redirect(req.query.returnUrl);
+      }
+      
+      if (user.role === "admin") {
+        return res.redirect("/admin");
+      }
+      
+      return res.redirect("/");
     } else {
-      console.log("Rendering auth/login with error: Invalid password");
-      res.render("auth/login", {
+      console.log("Rendering auth/login with error: Incorrect password");
+      return res.render("auth/login", {
         title: "Đăng nhập",
         user: req.session.user,
         error: "Tên đăng nhập hoặc mật khẩu sai",
       });
     }
   } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
+    console.error("Error during login:", err);
+    return res.render("auth/login", {
+      title: "Đăng nhập",
+      user: req.session.user,
+      error: "Đã xảy ra lỗi khi đăng nhập",
+    });
   }
 };
 

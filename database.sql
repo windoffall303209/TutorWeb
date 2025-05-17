@@ -91,3 +91,49 @@ CREATE TABLE Chats (
     FOREIGN KEY (sender_id) REFERENCES Users(id) ON DELETE CASCADE,
     FOREIGN KEY (receiver_id) REFERENCES Users(id) ON DELETE CASCADE
 );
+
+-- Bảng Class_Register (Đăng ký nhận lớp)
+CREATE TABLE Class_Register (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    class_id INT NOT NULL,
+    tutor_id INT NOT NULL,
+    status ENUM('pending', 'accepted', 'rejected') NOT NULL DEFAULT 'pending',
+    notes TEXT,
+    request_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    response_date TIMESTAMP NULL DEFAULT NULL,
+    FOREIGN KEY (class_id) REFERENCES Classes(id) ON DELETE CASCADE,
+    FOREIGN KEY (tutor_id) REFERENCES Tutors(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_class_tutor (class_id, tutor_id)
+);
+
+-- Bảng Class_Schedule (Lịch học)
+CREATE TABLE Class_Schedule (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    class_id INT NOT NULL,
+    tutor_id INT NOT NULL,
+    session_date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    location VARCHAR(255),
+    meeting_url VARCHAR(255),
+    status ENUM('scheduled', 'completed', 'cancelled', 'rescheduled') NOT NULL DEFAULT 'scheduled',
+    notes TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (class_id) REFERENCES Classes(id) ON DELETE CASCADE,
+    FOREIGN KEY (tutor_id) REFERENCES Tutors(id) ON DELETE CASCADE
+);
+
+-- Bảng Tutor_Ratings (Đánh giá gia sư)
+CREATE TABLE Tutor_Ratings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tutor_id INT NOT NULL,
+    user_id INT NOT NULL,
+    rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (tutor_id) REFERENCES Tutors(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_tutor_rating (user_id, tutor_id)
+);

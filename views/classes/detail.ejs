@@ -219,6 +219,16 @@
               <i class="fas fa-arrow-left me-2"></i>Quay lại
             </a>
 
+            <!-- Nút xem danh sách đăng ký - Chỉ hiển thị cho chủ lớp học -->
+            <% if (typeof user !== 'undefined' && user && user.id === classObj.user_id) { %>
+            <a
+              href="/classes/<%= classObj.id %>/registrations"
+              class="btn btn-info w-100 mt-2"
+            >
+              <i class="fas fa-users me-2"></i>Danh sách gia sư đăng ký
+            </a>
+            <% } %>
+
             <!-- Nút liên hệ (gọi điện thoại) -->
             <a href="tel:<%= classObj.phone %>" class="btn btn-success w-100">
               <i class="fas fa-phone-alt me-2"></i>Gọi điện
@@ -232,6 +242,41 @@
             >
               <i class="fas fa-comments me-2"></i>Chat với phụ huynh
             </a>
+            
+            <!-- Nút xem/tạo lịch học - Chỉ hiển thị nếu là chủ lớp hoặc gia sư được gán cho lớp -->
+            <% if (user.id === classObj.user_id || (classObj.tutor_id && user.is_tutor)) { %>
+            <a
+              href="/schedules/create/<%= classObj.id %>"
+              class="btn btn-info w-100 mt-2"
+            >
+              <i class="fas fa-calendar-alt me-2"></i>Quản lý lịch học
+            </a>
+            <% } %>
+            
+            <!-- Nút đăng ký nhận dạy lớp hoặc đăng ký làm gia sư -->
+            <% if (classObj.status === 'open' && user.id !== classObj.user_id) { %>
+              <% if (user.is_tutor) { %>
+                <!-- Người dùng đã là gia sư -->
+                <button 
+                  id="register-class-btn" 
+                  class="btn btn-warning w-100 mt-2 register-class-btn" 
+                  data-class-id="<%= classObj.id %>"
+                  onclick="registerForClass('<%= classObj.id %>')"
+                >
+                  <i class="fas fa-chalkboard-teacher me-2"></i>Đăng ký nhận dạy lớp
+                </button>
+                <!-- Debug info -->
+                <small class="d-none">ID lớp: <%= classObj.id %>, Kiểu: <%= typeof classObj.id %></small>
+              <% } else { %>
+                <!-- Người dùng chưa đăng ký làm gia sư -->
+                <a
+                  href="/tutors/register"
+                  class="btn btn-info w-100 mt-2"
+                >
+                  <i class="fas fa-user-graduate me-2"></i>Đăng ký làm gia sư trước
+                </a>
+              <% } %>
+            <% } %>
             <% } else { %>
             <!-- Người dùng chưa đăng nhập -->
             <a
@@ -264,3 +309,87 @@
     </div>
   </div>
 </div>
+
+<!-- Script xử lý đăng ký nhận dạy lớp -->
+<script>
+  function registerForClass(classId) {
+    console.log("registerForClass được gọi với ID:", classId);
+    
+    if (!classId) {
+      alert('Không tìm thấy ID lớp học. Vui lòng tải lại trang và thử lại.');
+      return;
+    }
+    
+    if (confirm('Bạn có chắc chắn muốn đăng ký nhận dạy lớp học này không?')) {
+      // Hiển thị trạng thái đang đăng ký
+      const registerBtn = document.getElementById('register-class-btn');
+      registerBtn.disabled = true;
+      registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+      
+      // Log dữ liệu trước khi gửi
+      console.log("Kiểu của ID:", typeof classId);
+      console.log("Giá trị ID:", classId);
+      
+      // Chuyển classId sang dạng số nếu là chuỗi
+      const classIdNumber = parseInt(classId, 10);
+      
+      // Gửi request với ID dạng số
+      fetch('/classes/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ classId: classIdNumber })
+      })
+      .then(response => {
+        console.log("Mã phản hồi:", response.status);
+        return response.json();
+      })
+      .then(data => {
+        console.log("Phản hồi từ server:", data);
+        if (data.success) {
+          // Đăng ký thành công
+          alert(data.message);
+          registerBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Đã đăng ký';
+          registerBtn.classList.remove('btn-warning');
+          registerBtn.classList.add('btn-secondary');
+        } else {
+          // Đăng ký thất bại, hiển thị lỗi và khôi phục nút
+          alert(data.message || 'Có lỗi xảy ra khi đăng ký nhận lớp');
+          registerBtn.disabled = false;
+          registerBtn.innerHTML = '<i class="fas fa-chalkboard-teacher me-2"></i>Đăng ký nhận dạy lớp';
+        }
+      })
+      .catch(error => {
+        console.error('Lỗi khi đăng ký nhận lớp:', error);
+        alert('Đã xảy ra lỗi khi đăng ký nhận lớp.');
+        registerBtn.disabled = false;
+        registerBtn.innerHTML = '<i class="fas fa-chalkboard-teacher me-2"></i>Đăng ký nhận dạy lớp';
+      });
+    }
+  }
+
+  // Tự động gắn sự kiện khi trang load
+  document.addEventListener('DOMContentLoaded', function() {
+    const registerBtn = document.getElementById('register-class-btn');
+    
+    if (registerBtn) {
+      console.log("Đã tìm thấy nút đăng ký");
+      // Lưu trữ ID lớp học vào biến để sử dụng sau này
+      const classId = registerBtn.getAttribute('data-class-id');
+      console.log("ID lớp học từ thuộc tính data:", classId);
+    }
+  });
+</script>
+
+<!-- Thêm CSS cho nút đăng ký -->
+<style>
+  .register-class-btn {
+    transition: all 0.3s ease;
+  }
+  
+  .register-class-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>

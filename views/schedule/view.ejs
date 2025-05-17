@@ -1,0 +1,300 @@
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm">
+        <div class="card-header bg-primary text-white p-4">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h1 class="h3 mb-0">
+                <i class="fas fa-calendar-alt me-2"></i>Lịch học của tôi
+              </h1>
+              <p class="mb-0 mt-2 opacity-75">Quản lý tất cả các buổi học</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card-body p-4">
+          <% if (schedules.length === 0) { %>
+            <div class="text-center py-5">
+              <img src="/img/no-data.svg" alt="Không có dữ liệu" width="200" class="mb-3">
+              <h4>Chưa có lịch học nào</h4>
+              <p class="text-muted">Bạn chưa có buổi học nào được lên lịch</p>
+            </div>
+          <% } else { %>
+            <div class="row">
+              <div class="col-md-4 mb-4">
+                <div class="card border-0 shadow-sm h-100">
+                  <div class="card-header bg-light">
+                    <h5 class="mb-0">Tổng quan</h5>
+                  </div>
+                  <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                      <div class="display-6 me-3 fw-bold text-primary"><%= schedules.length %></div>
+                      <div>Buổi học</div>
+                    </div>
+                    
+                    <div class="small mb-2">Trạng thái:</div>
+                    <div class="progress mb-2" style="height: 8px;">
+                      <% const scheduledCount = schedules.filter(s => s.status === 'scheduled').length; %>
+                      <% const completedCount = schedules.filter(s => s.status === 'completed').length; %>
+                      <% const cancelledCount = schedules.filter(s => s.status === 'cancelled').length; %>
+                      <% const rescheduledCount = schedules.filter(s => s.status === 'rescheduled').length; %>
+                      
+                      <div class="progress-bar bg-primary" style="width: '<%= (scheduledCount / schedules.length * 100) %>%'" title="Đã lên lịch"></div>
+                      <div class="progress-bar bg-success" style="width: '<%= (completedCount / schedules.length * 100) %>%'" title="Đã hoàn thành"></div>
+                      <div class="progress-bar bg-danger" style="width: '<%= (cancelledCount / schedules.length * 100) %>%'" title="Đã hủy"></div>
+                      <div class="progress-bar bg-warning" style="width: '<%= (rescheduledCount / schedules.length * 100) %>%'" title="Đã dời lịch"></div>
+                    </div>
+                    <div class="d-flex justify-content-between small text-muted">
+                      <span><%= scheduledCount %> lên lịch</span>
+                      <span><%= completedCount %> hoàn thành</span>
+                      <span><%= cancelledCount %> hủy</span>
+                      <span><%= rescheduledCount %> dời lịch</span>
+                    </div>
+                    
+                    <hr>
+                    <h6 class="mb-3">Buổi học sắp tới</h6>
+                    
+                    <% 
+                      const upcomingSchedules = schedules
+                        .filter(s => s.status === 'scheduled')
+                        .sort((a, b) => new Date(a.session_date) - new Date(b.session_date))
+                        .slice(0, 3);
+                      
+                      if (upcomingSchedules.length === 0) { 
+                    %>
+                      <p class="text-muted small">Không có buổi học nào sắp tới</p>
+                    <% } else { %>
+                      <% upcomingSchedules.forEach(schedule => { 
+                        const sessionDate = moment(schedule.session_date).format('DD/MM/YYYY');
+                        const startTime = schedule.start_time.substring(0, 5);
+                      %>
+                        <div class="d-flex align-items-center mb-2 p-2 rounded bg-light">
+                          <div class="me-3 text-center">
+                            <div class="fw-bold"><%= sessionDate.split('/')[0] %></div>
+                            <div class="small"><%= sessionDate.split('/')[1] %>/<%= sessionDate.split('/')[2].substring(2) %></div>
+                          </div>
+                          <div>
+                            <div class="fw-bold"><%= schedule.subject_name %></div>
+                            <div class="small text-muted"><%= startTime %></div>
+                          </div>
+                        </div>
+                      <% }); %>
+                    <% } %>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-8">
+                <div class="card border-0 shadow-sm">
+                  <div class="card-header bg-light">
+                    <h5 class="mb-0">Danh sách lịch học</h5>
+                  </div>
+                  <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                      <thead>
+                        <tr>
+                          <th>Ngày</th>
+                          <th>Thời gian</th>
+                          <th>Môn học</th>
+                          <th>Người dạy/học</th>
+                          <th>Trạng thái</th>
+                          <th>Thao tác</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% 
+                          // Sắp xếp lịch học theo ngày, sớm nhất lên đầu
+                          const sortedSchedules = [...schedules].sort((a, b) => new Date(a.session_date) - new Date(b.session_date));
+                          
+                          sortedSchedules.forEach(schedule => { 
+                            const sessionDate = moment(schedule.session_date).format('DD/MM/YYYY');
+                            const startTime = schedule.start_time.substring(0, 5);
+                            const endTime = schedule.end_time.substring(0, 5);
+                            
+                            // Xác định màu sắc trạng thái
+                            let statusClass = '';
+                            let statusText = '';
+                            
+                            if (schedule.status === 'scheduled') {
+                              statusClass = 'bg-primary';
+                              statusText = 'Đã lên lịch';
+                            } else if (schedule.status === 'completed') {
+                              statusClass = 'bg-success';
+                              statusText = 'Đã hoàn thành';
+                            } else if (schedule.status === 'cancelled') {
+                              statusClass = 'bg-danger';
+                              statusText = 'Đã hủy';
+                            } else {
+                              statusClass = 'bg-warning';
+                              statusText = 'Đã dời lịch';
+                            }
+                        %>
+                          <tr>
+                            <td><%= sessionDate %></td>
+                            <td><%= startTime %> - <%= endTime %></td>
+                            <td><%= schedule.subject_name %> - <%= schedule.grade_name %></td>
+                            <td>
+                              <% if (userRole === 'admin' || userId === schedule.user_id) { %>
+                                <%= schedule.tutor_name || 'Chưa có gia sư' %>
+                              <% } else { %>
+                                <%= schedule.parent_name %>
+                              <% } %>
+                            </td>
+                            <td>
+                              <span class="badge <%= statusClass %>"><%= statusText %></span>
+                            </td>
+                            <td>
+                              <button 
+                                class="btn btn-sm btn-outline-primary show-schedule-details"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#scheduleDetailModal"
+                                data-schedule-id="<%= schedule.id %>"
+                                data-subject="<%= schedule.subject_name %>"
+                                data-grade="<%= schedule.grade_name %>"
+                                data-tutor-name="<%= schedule.tutor_name || 'Chưa có gia sư' %>"
+                                data-parent-name="<%= schedule.parent_name %>"
+                                data-date="<%= sessionDate %>"
+                                data-start-time="<%= startTime %>"
+                                data-end-time="<%= endTime %>"
+                                data-location="<%= schedule.location || '' %>"
+                                data-meeting-url="<%= schedule.meeting_url || '' %>"
+                                data-status="<%= schedule.status %>"
+                                data-notes="<%= schedule.notes || '' %>"
+                              >
+                                <i class="fas fa-eye"></i>
+                              </button>
+                            </td>
+                          </tr>
+                        <% }); %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule Detail Modal -->
+<div class="modal fade" id="scheduleDetailModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detail-title">Chi tiết lịch học</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-4">
+          <span class="badge bg-primary" id="detail-status">Đã lên lịch</span>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Ngày học:</div>
+          <div class="item-value" id="detail-date"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Thời gian:</div>
+          <div class="item-value" id="detail-time"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Môn học:</div>
+          <div class="item-value" id="detail-subject"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Gia sư:</div>
+          <div class="item-value" id="detail-tutor"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Phụ huynh:</div>
+          <div class="item-value" id="detail-parent"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Địa điểm học:</div>
+          <div class="item-value" id="detail-location"></div>
+        </div>
+        
+        <div class="schedule-detail-item">
+          <div class="item-label">Link học trực tuyến:</div>
+          <div class="item-value" id="detail-meeting"></div>
+        </div>
+        
+        <div class="schedule-notes">
+          <h6><i class="fas fa-sticky-note me-2"></i>Ghi chú</h6>
+          <div id="detail-notes"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Link stylesheet -->
+<link rel="stylesheet" href="/css/schedule.css">
+
+<!-- Script xử lý hiển thị chi tiết lịch học -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Xử lý hiển thị modal chi tiết lịch học
+    const scheduleDetailModal = document.getElementById('scheduleDetailModal');
+    
+    if (scheduleDetailModal) {
+      scheduleDetailModal.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        
+        // Lấy dữ liệu từ button
+        const subject = button.getAttribute('data-subject');
+        const grade = button.getAttribute('data-grade');
+        const tutorName = button.getAttribute('data-tutor-name');
+        const parentName = button.getAttribute('data-parent-name');
+        const date = button.getAttribute('data-date');
+        const startTime = button.getAttribute('data-start-time');
+        const endTime = button.getAttribute('data-end-time');
+        const location = button.getAttribute('data-location');
+        const meetingUrl = button.getAttribute('data-meeting-url');
+        const status = button.getAttribute('data-status');
+        const notes = button.getAttribute('data-notes');
+        
+        // Cập nhật nội dung modal
+        document.getElementById('detail-title').textContent = `${subject} - ${grade}`;
+        
+        const statusBadge = document.getElementById('detail-status');
+        statusBadge.textContent = status === 'scheduled' ? 'Đã lên lịch' : 
+                                  status === 'completed' ? 'Đã hoàn thành' : 
+                                  status === 'cancelled' ? 'Đã hủy' : 'Đã dời lịch';
+                                  
+        statusBadge.className = `badge ${status === 'scheduled' ? 'bg-primary' : 
+                                         status === 'completed' ? 'bg-success' : 
+                                         status === 'cancelled' ? 'bg-danger' : 'bg-warning'}`;
+        
+        document.getElementById('detail-date').textContent = date;
+        document.getElementById('detail-time').textContent = `${startTime} - ${endTime}`;
+        document.getElementById('detail-subject').textContent = `${subject} - ${grade}`;
+        document.getElementById('detail-tutor').textContent = tutorName;
+        document.getElementById('detail-parent').textContent = parentName || 'Không có thông tin';
+        
+        document.getElementById('detail-location').textContent = location || 'Không có thông tin';
+        
+        const detailMeeting = document.getElementById('detail-meeting');
+        if (meetingUrl) {
+          detailMeeting.innerHTML = `<a href="${meetingUrl}" target="_blank">${meetingUrl}</a>`;
+        } else {
+          detailMeeting.textContent = 'Không có thông tin';
+        }
+        
+        document.getElementById('detail-notes').textContent = notes || 'Không có ghi chú';
+      });
+    }
+  });
+</script> 

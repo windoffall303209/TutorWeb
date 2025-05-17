@@ -140,7 +140,7 @@
             <% tutor.subjects.forEach(function(subject, index) { %>
             <span
               class="badge bg-primary p-2 animate__animated animate__fadeIn"
-              style="animation-delay: <%= index * 0.1 %>s"
+              style="animation-delay: '<%= (index * 0.1) %>s'"
             >
               <i class="fas fa-check-circle me-1"></i>
               <%= subject.name %>
@@ -162,7 +162,7 @@
             <% tutor.grades.forEach(function(grade, index) { %>
             <span
               class="badge bg-success p-2 animate__animated animate__fadeIn"
-              style="animation-delay: <%= index * 0.1 + 0.3 %>s"
+              style="animation-delay: '<%= (index * 0.1 + 0.3) %>s'"
             >
               <i class="fas fa-layer-group me-1"></i>
               <%= grade.name %>
@@ -223,6 +223,134 @@
     </div>
   </div>
 </div>
+
+<!-- Phần đánh giá gia sư - thêm vào trước thẻ đóng của container chính -->
+<div class="row mt-5">
+  <div class="col-12">
+    <div class="rating-section" id="tutor-ratings" data-tutor-id="<%= tutor.id %>">
+      <h2 class="mb-4">Đánh giá về gia sư này</h2>
+      
+      <div class="rating-overview">
+        <div class="rating-average">
+          <div class="rating-score" id="average-rating"><%= averageRating || '0.0' %></div>
+          <div class="rating-count"><span id="total-ratings"><%= reviews ? reviews.length : 0 %></span> đánh giá</div>
+        </div>
+        
+        <div class="rating-distribution">
+          <% for(let i = 5; i >= 1; i--) { %>
+            <div class="rating-bar">
+              <div class="rating-label"><%= i %> <i class="fas fa-star"></i></div>
+              <div class="rating-progress">
+                <% 
+                  let count = 0;
+                  let percent = 0;
+                  if (reviews && reviews.length > 0) {
+                    count = reviews.filter(r => r.rating === i).length;
+                    percent = Math.round((count / reviews.length) * 100);
+                  }
+                %>
+                <div class="rating-progress-inner" id="rating-progress-<%= i %>" style="width: '<%= percent %>%'"></div>
+              </div>
+              <div class="rating-percentage" id="rating-percent-<%= i %>"><%= percent %>%</div>
+            </div>
+          <% } %>
+        </div>
+      </div>
+      
+      <% if (user && user.id !== tutor.user_id) { %>
+        <div class="rating-form" id="rating-form" data-tutor-id="<%= tutor.id %>">
+          <div class="rating-form-header">
+            <h4>Đánh giá của bạn</h4>
+            <p class="text-muted">Hãy chia sẻ trải nghiệm của bạn với gia sư này</p>
+          </div>
+          
+          <form>
+            <div class="rating-stars">
+              <input type="radio" id="star5" name="rating" value="5" <%= userReview && userReview.rating === 5 ? 'checked' : '' %> />
+              <label for="star5" title="5 sao"></label>
+              
+              <input type="radio" id="star4" name="rating" value="4" <%= userReview && userReview.rating === 4 ? 'checked' : '' %> />
+              <label for="star4" title="4 sao"></label>
+              
+              <input type="radio" id="star3" name="rating" value="3" <%= userReview && userReview.rating === 3 ? 'checked' : '' %> />
+              <label for="star3" title="3 sao"></label>
+              
+              <input type="radio" id="star2" name="rating" value="2" <%= userReview && userReview.rating === 2 ? 'checked' : '' %> />
+              <label for="star2" title="2 sao"></label>
+              
+              <input type="radio" id="star1" name="rating" value="1" <%= userReview && userReview.rating === 1 ? 'checked' : '' %> />
+              <label for="star1" title="1 sao"></label>
+            </div>
+            
+            <div class="rating-comment">
+              <textarea id="rating-comment" placeholder="Chia sẻ trải nghiệm của bạn về gia sư này..."><%= userReview ? userReview.comment : '' %></textarea>
+            </div>
+            
+            <div class="rating-submit">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-paper-plane me-2"></i><%= userReview ? 'Cập nhật đánh giá' : 'Gửi đánh giá' %>
+              </button>
+            </div>
+          </form>
+        </div>
+      <% } %>
+      
+      <div class="rating-items" id="rating-items">
+        <% if (reviews && reviews.length > 0) { %>
+          <% reviews.forEach(review => { %>
+            <div class="rating-item <%= userReview && userReview.id === review.id ? 'user-rating-highlight' : '' %>">
+              <div class="rating-item-header">
+                <div class="rating-user-avatar">
+                  <%= review.user_name.charAt(0).toUpperCase() %>
+                </div>
+                
+                <div class="rating-user-info">
+                  <div class="rating-user-name">
+                    <%= review.user_name %>
+                    <% if (userReview && userReview.id === review.id) { %>
+                      <span class="badge bg-info ms-2">Đánh giá của bạn</span>
+                    <% } %>
+                  </div>
+                  <div class="rating-date">
+                    <%= new Date(review.created_at).toLocaleDateString('vi-VN', {day: '2-digit', month: '2-digit', year: 'numeric'}) %>
+                  </div>
+                </div>
+                
+                <div class="rating-stars-display">
+                  <% for(let i = 1; i <= 5; i++) { %>
+                    <i class="<%= i <= review.rating ? 'fas' : 'far' %> fa-star"></i>
+                  <% } %>
+                </div>
+              </div>
+              
+              <div class="rating-content">
+                <%= review.comment || '<em>Không có bình luận</em>' %>
+              </div>
+              
+              <% if (userReview && userReview.id === review.id) { %>
+                <div class="rating-actions">
+                  <button class="btn btn-sm btn-outline-primary edit-rating-btn">
+                    <i class="fas fa-edit"></i> Sửa
+                  </button>
+                </div>
+              <% } %>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="no-ratings-message">
+            <div class="no-ratings-icon"><i class="far fa-comment-dots"></i></div>
+            <h5>Chưa có đánh giá nào</h5>
+            <p>Hãy là người đầu tiên đánh giá gia sư này!</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Thêm CSS và JS cho tính năng đánh giá -->
+<link rel="stylesheet" href="/css/tutor-rating.css">
+<script src="/js/tutor-rating.js"></script>
 
 <!-- Thêm thư viện Font Awesome và Animate.css -->
 <link

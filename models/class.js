@@ -16,10 +16,18 @@ module.exports = {
 
   getById: async (id) => {
     const [results] = await db.query(
-      `SELECT c.*, s.name as subject_name, g.name as grade_name 
+      `SELECT c.*, s.name as subject, g.name as grade,
+       t.id as tutor_id, t.full_name as tutor_name, t.phone as tutor_phone, 
+       t.address as tutor_address, t.photo as tutor_photo
        FROM classes c 
        JOIN subjects s ON c.subject_id = s.id 
        JOIN grades g ON c.grade_id = g.id 
+       LEFT JOIN (
+         SELECT cr.class_id, cr.tutor_id 
+         FROM class_register cr 
+         WHERE cr.status = 'accepted'
+       ) as cr ON c.id = cr.class_id
+       LEFT JOIN tutors t ON cr.tutor_id = t.id
        WHERE c.id = ?`,
       [id]
     );

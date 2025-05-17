@@ -1,0 +1,93 @@
+<!-- Display classes created by the user -->
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0 mb-4">
+        <div class="card-header bg-primary text-white">
+          <h1 class="h4 mb-0"><i class="fas fa-chalkboard me-2"></i>Lớp học đã tạo</h1>
+        </div>
+        <div class="card-body">
+          <% if (classes && classes.length > 0) { %>
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>Môn học</th>
+                    <th>Lớp</th>
+                    <th>Học phí</th>
+                    <th>Số buổi/tuần</th>
+                    <th>Địa điểm</th>
+                    <th>Trạng thái</th>
+                    <th>Số GS đăng ký</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% classes.forEach(function(classItem) { %>
+                    <tr>
+                      <td><%= classItem.subject_name %></td>
+                      <td><%= classItem.grade_name %></td>
+                      <td><%= classItem.fee_per_session.toLocaleString('vi-VN') %> VNĐ</td>
+                      <td><%= classItem.sessions_per_week %></td>
+                      <td>
+                        <%= classItem.district %>, <%= classItem.province %>
+                        <% if (classItem.learning_mode === 'online') { %>
+                          <span class="badge bg-info">Online</span>
+                        <% } else if (classItem.learning_mode === 'offline') { %>
+                          <span class="badge bg-success">Offline</span>
+                        <% } else { %>
+                          <span class="badge bg-warning text-dark">Linh hoạt</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (classItem.status === 'open') { %>
+                          <span class="badge bg-success">Còn trống</span>
+                        <% } else if (classItem.status === 'taken') { %>
+                          <span class="badge bg-primary">Đã nhận</span>
+                        <% } else { %>
+                          <span class="badge bg-secondary">Đóng</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <% if (classItem.registration_count > 0) { %>
+                          <span class="badge bg-info"><%= classItem.registration_count %></span>
+                        <% } else { %>
+                          <span class="badge bg-secondary">0</span>
+                        <% } %>
+                      </td>
+                      <td>
+                        <div class="btn-group" role="group">
+                          <a href="/classes/<%= classItem.id %>" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                            <i class="fas fa-eye"></i>
+                          </a>
+                          <a href="/user/classes?classId=<%= classItem.id %>" class="btn btn-sm btn-outline-warning" title="Chỉnh sửa">
+                            <i class="fas fa-edit"></i>
+                          </a>
+                          <a href="/classes/<%= classItem.id %>/registrations" class="btn btn-sm btn-outline-info" title="Danh sách gia sư đăng ký">
+                            <i class="fas fa-users"></i>
+                          </a>
+                          <% if (classItem.status === 'taken') { %>
+                            <a href="/schedules/create/<%= classItem.id %>" class="btn btn-sm btn-outline-success" title="Quản lý lịch học">
+                              <i class="fas fa-calendar-alt"></i>
+                            </a>
+                          <% } %>
+                        </div>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle me-2"></i>Bạn chưa tạo lớp học nào.
+              <a href="/classes/create" class="btn btn-primary ms-3">
+                <i class="fas fa-plus-circle me-2"></i>Tạo lớp học mới
+              </a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

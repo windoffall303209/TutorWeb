@@ -1,0 +1,132 @@
+/* CSS for Class Registration */
+
+.registration-card {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.registration-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.registration-card .card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 15px 20px;
+}
+
+.registration-card .card-body {
+  padding: 20px;
+}
+
+.registration-status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-pending {
+  background-color: #fff8e1;
+  color: #f57c00;
+  border: 1px solid rgba(245, 124, 0, 0.2);
+}
+
+.status-accepted {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid rgba(46, 125, 50, 0.2);
+}
+
+.status-rejected {
+  background-color: #fbe9e7;
+  color: #d32f2f;
+  border: 1px solid rgba(211, 47, 47, 0.2);
+}
+
+.tutor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.class-info-badge {
+  background: #f0f4ff;
+  border-radius: 20px;
+  padding: 5px 10px;
+  margin-right: 8px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(63, 81, 181, 0.2);
+  color: #3f51b5;
+  white-space: nowrap;
+}
+
+.tutor-mini-profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.tutor-mini-profile img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.tutor-mini-info h5 {
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.tutor-register-btn {
+  margin-top: 20px;
+  width: 100%;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.tutor-register-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.registration-notes {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 4px solid #6c757d;
+  font-style: italic;
+}
+
+.registration-time {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-top: 10px;
+}
+
+/* Modal styling */
+.modal-response-form {
+  padding: 20px;
+}
+
+.modal-response-form textarea {
+  resize: none;
+  min-height: 120px;
+} 

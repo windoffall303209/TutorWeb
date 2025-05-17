@@ -497,3 +497,86 @@ exports.changePassword = async (req, res) => {
     });
   }
 };
+
+// Lấy danh sách lớp học đã tạo
+exports.getCreatedClasses = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Lấy danh sách lớp học đã tạo bởi người dùng
+    const [classes] = await db.query(`
+      SELECT c.*, s.name as subject_name, g.name as grade_name,
+        (SELECT COUNT(*) FROM class_register WHERE class_id = c.id) as registration_count,
+        (SELECT COUNT(*) FROM class_register WHERE class_id = c.id AND status = 'accepted') as accepted_count
+      FROM classes c
+      JOIN subjects s ON c.subject_id = s.id
+      JOIN grades g ON c.grade_id = g.id
+      WHERE c.user_id = ?
+      ORDER BY c.created_at DESC
+    `, [userId]);
+    
+    res.render("user/created_classes", {
+      title: "Lớp học đã tạo",
+      classes,
+      user: req.user
+    });
+  } catch (error) {
+    console.error("Error fetching created classes:", error);
+    res.status(500).render("error", {
+      message: "Có lỗi xảy ra khi lấy danh sách lớp học đã tạo",
+      error
+    });
+  }
+};
+
+// Lấy danh sách lớp học đã nhận dạy (dành cho gia sư)
+exports.getRegisteredClasses = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Kiểm tra người dùng có phải là gia sư
+    if (!req.user.is_tutor) {
+      return res.status(403).render("error", {
+        message: "Bạn không có quyền truy cập trang này",
+        error: { status: 403 }
+      });
+    }
+    
+    // Lấy ID của gia sư
+    const [tutors] = await db.query("SELECT id FROM tutors WHERE user_id = ?", [userId]);
+    
+    if (tutors.length === 0) {
+      return res.status(404).render("error", {
+        message: "Không tìm thấy thông tin gia sư",
+        error: { status: 404 }
+      });
+    }
+    
+    const tutorId = tutors[0].id;
+    
+    // Lấy danh sách lớp học đã đăng ký
+    const [registrations] = await db.query(`
+      SELECT cr.*, c.*, s.name as subject_name, g.name as grade_name,
+        u.username as parent_username
+      FROM class_register cr
+      JOIN classes c ON cr.class_id = c.id
+      JOIN subjects s ON c.subject_id = s.id
+      JOIN grades g ON c.grade_id = g.id
+      JOIN users u ON c.user_id = u.id
+      WHERE cr.tutor_id = ?
+      ORDER BY cr.request_date DESC
+    `, [tutorId]);
+    
+    res.render("user/registered_classes", {
+      title: "Lớp học đã nhận",
+      registrations,
+      user: req.user
+    });
+  } catch (error) {
+    console.error("Error fetching registered classes:", error);
+    res.status(500).render("error", {
+      message: "Có lỗi xảy ra khi lấy danh sách lớp học đã nhận",
+      error
+    });
+  }
+};

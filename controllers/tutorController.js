@@ -61,10 +61,45 @@ exports.getTutorDetail = async (req, res) => {
     if (!tutor) {
       return res.status(404).send("Tutor not found");
     }
+    
+    // Lấy đánh giá của gia sư
+    const db = await dbPromise;
+    const [reviews] = await db.query(
+      `SELECT r.*, u.username as user_name 
+       FROM Tutor_Ratings r
+       JOIN Users u ON r.user_id = u.id
+       WHERE r.tutor_id = ?
+       ORDER BY r.created_at DESC`,
+      [id]
+    );
+    
+    // Tính điểm đánh giá trung bình
+    let averageRating = 0;
+    if (reviews && reviews.length > 0) {
+      const sum = reviews.reduce((total, r) => total + r.rating, 0);
+      averageRating = (sum / reviews.length).toFixed(1);
+    }
+    
+    // Kiểm tra người dùng hiện tại đã đánh giá chưa
+    let userReview = null;
+    if (req.session.user) {
+      const [userRatings] = await db.query(
+        "SELECT * FROM Tutor_Ratings WHERE tutor_id = ? AND user_id = ?",
+        [id, req.session.user.id]
+      );
+      
+      if (userRatings && userRatings.length > 0) {
+        userReview = userRatings[0];
+      }
+    }
+    
     res.render("tutors/detail", {
       title: "Chi tiết gia sư",
       tutor,
       user: req.session.user,
+      reviews,
+      averageRating,
+      userReview
     });
   } catch (error) {
     console.error("Error in getTutorDetail:", error);
