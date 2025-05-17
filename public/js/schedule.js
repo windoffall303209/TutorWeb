@@ -104,21 +104,17 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Xử lý cập nhật trạng thái lịch học
    */
-  const statusUpdateButtons = document.querySelectorAll('.update-schedule-status');
-  if (statusUpdateButtons.length > 0) {
-    statusUpdateButtons.forEach(button => {
-      button.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const scheduleId = this.dataset.scheduleId;
-        const status = this.dataset.status;
-        
-        // Lấy ghi chú từ form modal (nếu có)
-        const notesElement = document.getElementById('schedule-status-notes');
-        const notes = notesElement ? notesElement.value : '';
-        
-        updateScheduleStatus(scheduleId, status, notes);
-      });
+  const confirmStatusBtn = document.getElementById('confirm-status-btn');
+  if (confirmStatusBtn) {
+    confirmStatusBtn.addEventListener('click', function() {
+      const scheduleId = this.dataset.scheduleId;
+      const status = this.dataset.status;
+      
+      // Lấy ghi chú từ form modal
+      const notesElement = document.getElementById('schedule-status-notes');
+      const notes = notesElement ? notesElement.value : '';
+      
+      updateScheduleStatus(scheduleId, status, notes);
     });
   }
 

@@ -18,7 +18,7 @@ module.exports = {
     const [results] = await db.query(
       `SELECT c.*, s.name as subject, g.name as grade,
        t.id as tutor_id, t.full_name as tutor_name, t.phone as tutor_phone, 
-       t.address as tutor_address, t.photo as tutor_photo
+       t.address as tutor_address, t.photo as tutor_photo, t.user_id as tutor_user_id
        FROM classes c 
        JOIN subjects s ON c.subject_id = s.id 
        JOIN grades g ON c.grade_id = g.id 

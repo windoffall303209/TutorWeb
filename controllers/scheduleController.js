@@ -16,7 +16,7 @@ exports.getCreateScheduleForm = async (req, res) => {
     // Lấy thông tin lớp học
     const [classes] = await db.query(
       `SELECT c.*, s.name as subject_name, g.name as grade_name,
-        t.id as tutor_id, t.full_name as tutor_name
+        t.id as tutor_id, t.full_name as tutor_name, t.user_id as tutor_user_id
        FROM Classes c
        JOIN Subjects s ON c.subject_id = s.id
        JOIN Grades g ON c.grade_id = g.id
